@@ -46,3 +46,25 @@ export type FilterParams = {
     };
   };
 };
+
+export type SearchParams = {
+  field: "name" | "emailAddress" | "mobileNumber" | "domain";
+  search: string;
+  first: number;
+};
+
+export type FilterParams = {
+  first: number;
+  after?: string;
+  filter?: {
+    name?: string[];
+    emailAddress?: string[];
+    domain?: string[];
+    status?: string[];
+    verificationStatus?: string[];
+    dateRegistered?: {
+      from: string;
+      to: string;
+    };
+  };
+};

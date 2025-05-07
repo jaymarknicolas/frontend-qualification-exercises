@@ -15,11 +15,11 @@ import {
 import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getDateRange } from "@/lib/utils";
+import { useMembersContext } from "@/contexts/MembersContext";
 
 interface DateRangeFilterProps {
   className?: string;
   label: string;
-  setSelectedFilters: any;
   filterKey: string;
   selectedDateFilterOption: any;
   setSelectedDateFilterOption: any;
@@ -28,11 +28,11 @@ interface DateRangeFilterProps {
 const DateRangeFilter = ({
   label,
   className,
-  setSelectedFilters,
   filterKey,
   selectedDateFilterOption,
   setSelectedDateFilterOption,
 }: DateRangeFilterProps) => {
+  const { setSelectedFilters } = useMembersContext();
   const options = [
     "Today",
     "Yesterday",

@@ -17,23 +17,22 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { useMembersContext } from "@/contexts/MembersContext";
+
 interface StatusFilterProps {
   className?: string;
   filters: string[];
   label: string;
-  selectedFilters: any;
   filterKey: string;
-  setSelectedFilters: any;
 }
 
 const StatusFilter = ({
   label,
   filters,
   className,
-  selectedFilters,
   filterKey,
-  setSelectedFilters,
 }: StatusFilterProps) => {
+  const { selectedFilters, setSelectedFilters } = useMembersContext();
   const [open, setOpen] = useState(false);
   const [tempValue, setTempValue] = useState<string | undefined>(
     selectedFilters[filterKey]

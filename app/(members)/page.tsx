@@ -5,6 +5,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useMembers } from "@/actions/members/useMembers";
 import { Member } from "@/types";
 import MembersTable from "@/components/members/table";
+import { MembersContext } from "@/contexts/MembersContext";
 
 const Home = () => {
   const [pageSize, setPageSize] = useState<number>(10);
@@ -13,6 +14,11 @@ const Home = () => {
   const [currentAfter, setCurrentAfter] = useState<string | undefined>(
     undefined
   );
+
+  const [nameSearch, setNameSearch] = useState("");
+  const [emailSearch, setEmailSearch] = useState("");
+  const [mobileSearch, setMobileSearch] = useState("");
+  const [domainSearch, setDomainSearch] = useState("");
 
   const [selectedFilters, setSelectedFilters] = useState<{
     name?: string[];
@@ -57,39 +63,44 @@ const Home = () => {
   });
 
   useEffect(() => {
-    // Extract the members' data from the API response
     const members = data?.edges?.map((edge: any) => edge.node) || [];
     setMembers(members);
     console.log(members.length);
   }, [data, isLoading, isFetching]);
 
   return (
-    <div className="flex flex-col">
-      <div className="container max-w-[1440px] mx-auto px-6 py-6 flex flex-col  space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-[32px] font-medium leading-9 text-white">
-            Members
-          </h1>
-          <p className="text-base text-neutral-500">View your members here.</p>
-        </div>
+    <MembersContext.Provider
+      value={{
+        members,
+        pageSize,
+        setPageSize,
+        currentAfter,
+        setCurrentAfter,
+        cursorStack,
+        setCursorStack,
+        selectedFilters,
+        setSelectedFilters,
+        data,
+        isLoading,
+      }}
+    >
+      <div className="flex flex-col">
+        <div className="container max-w-[1440px] mx-auto px-6 py-6 flex flex-col  space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-[32px] font-medium leading-9 text-white">
+              Members
+            </h1>
+            <p className="text-base text-neutral-500">
+              View your members here.
+            </p>
+          </div>
 
-        <div className="flex-1 ">
-          <MembersTable
-            members={members}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            currentAfter={currentAfter}
-            cursorStack={cursorStack}
-            setCurrentAfter={setCurrentAfter}
-            setCursorStack={setCursorStack}
-            data={data}
-            setSelectedFilters={setSelectedFilters}
-            selectedFilters={selectedFilters}
-            isLoading={isLoading}
-          />
+          <div className="flex-1 ">
+            <MembersTable />
+          </div>
         </div>
       </div>
-    </div>
+    </MembersContext.Provider>
   );
 };
 

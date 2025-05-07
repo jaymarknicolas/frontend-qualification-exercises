@@ -16,20 +16,12 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import DateRangePicker from "./filter-components/date-range-filter";
 import StatusFilter from "./filter-components/status-filter";
 import ChecklistFilter from "./filter-components/checklist-filter";
+import { useMembersContext } from "@/contexts/MembersContext";
 
-interface MembersFilterProps {
-  data: any;
-  setSelectedFilters: any;
-  selectedFilters: any;
-  isLoading: boolean;
-}
+const MembersFilter = () => {
+  const { data, setSelectedFilters, selectedFilters, isLoading } =
+    useMembersContext();
 
-const MembersFilter = ({
-  data,
-  setSelectedFilters,
-  selectedFilters,
-  isLoading,
-}: MembersFilterProps) => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [selectedDateFilterOption, setSelectedDateFilterOption] = useState({
@@ -89,57 +81,43 @@ const MembersFilter = ({
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <ChecklistFilter
-              setSelectedFilters={setSelectedFilters}
-              selectedFilters={selectedFilters}
               label={filterOptions.name.label}
               filters={filterOptions.name.filters}
               filterKey="name"
             />
             <StatusFilter
-              setSelectedFilters={setSelectedFilters}
-              selectedFilters={selectedFilters}
               filterKey="verificationStatus"
               label={filterOptions.verificationStatus.label}
               filters={filterOptions.verificationStatus.filters}
             />
             <ChecklistFilter
-              setSelectedFilters={setSelectedFilters}
-              selectedFilters={selectedFilters}
               label={filterOptions.emailAddress.label}
               filters={filterOptions.emailAddress.filters}
               filterKey="emailAddress"
             />
             <ChecklistFilter
-              setSelectedFilters={setSelectedFilters}
-              selectedFilters={selectedFilters}
               label={filterOptions.mobileNumber.label}
               filters={filterOptions.mobileNumber.filters}
               filterKey="mobileNumber"
             />
             <ChecklistFilter
-              setSelectedFilters={setSelectedFilters}
-              selectedFilters={selectedFilters}
               label={filterOptions.domain.label}
               filters={filterOptions.domain.filters}
               filterKey="domain"
             />
             <DateRangePicker
               label="Date Registered"
-              setSelectedFilters={setSelectedFilters}
               filterKey="dateTimeCreated"
               selectedDateFilterOption={selectedDateFilterOption}
               setSelectedDateFilterOption={setSelectedDateFilterOption}
             />
             <StatusFilter
-              setSelectedFilters={setSelectedFilters}
-              selectedFilters={selectedFilters}
               filterKey="status"
               label={filterOptions.status.label}
               filters={filterOptions.status.filters}
             />
             <DateRangePicker
               label="Date and Time Last Active"
-              setSelectedFilters={setSelectedFilters}
               filterKey="dateTimeLastActive"
               selectedDateFilterOption={selectedDateFilterOption}
               setSelectedDateFilterOption={setSelectedDateFilterOption}
@@ -172,40 +150,30 @@ const MembersFilter = ({
             </div>
             <div className="grid gap-3">
               <ChecklistFilter
-                setSelectedFilters={setSelectedFilters}
-                selectedFilters={selectedFilters}
                 label={filterOptions.name.label}
                 filters={filterOptions.name.filters}
                 className="justify-between"
                 filterKey="name"
               />
               <StatusFilter
-                setSelectedFilters={setSelectedFilters}
-                selectedFilters={selectedFilters}
                 filterKey="verificationStatus"
                 label={filterOptions.verificationStatus.label}
                 filters={filterOptions.verificationStatus.filters}
                 className="justify-between"
               />
               <ChecklistFilter
-                setSelectedFilters={setSelectedFilters}
-                selectedFilters={selectedFilters}
                 label={filterOptions.emailAddress.label}
                 filters={filterOptions.emailAddress.filters}
                 className="justify-between"
                 filterKey="emailAddress"
               />
               <ChecklistFilter
-                setSelectedFilters={setSelectedFilters}
-                selectedFilters={selectedFilters}
                 label={filterOptions.mobileNumber.label}
                 filters={filterOptions.mobileNumber.filters}
                 className="justify-between"
                 filterKey="mobileNumber"
               />
               <ChecklistFilter
-                setSelectedFilters={setSelectedFilters}
-                selectedFilters={selectedFilters}
                 label={filterOptions.domain.label}
                 filters={filterOptions.domain.filters}
                 className="justify-between"
@@ -214,14 +182,11 @@ const MembersFilter = ({
               <DateRangePicker
                 label="Date Registered"
                 className="justify-between"
-                setSelectedFilters={setSelectedFilters}
                 filterKey="dateTimeCreated"
                 selectedDateFilterOption={selectedDateFilterOption}
                 setSelectedDateFilterOption={setSelectedDateFilterOption}
               />
               <StatusFilter
-                setSelectedFilters={setSelectedFilters}
-                selectedFilters={selectedFilters}
                 filterKey="status"
                 label={filterOptions.status.label}
                 filters={filterOptions.status.filters}
@@ -230,7 +195,6 @@ const MembersFilter = ({
               <DateRangePicker
                 label="Date and Time Last Active"
                 className="justify-between"
-                setSelectedFilters={setSelectedFilters}
                 filterKey="dateTimeLastActive"
                 selectedDateFilterOption={selectedDateFilterOption}
                 setSelectedDateFilterOption={setSelectedDateFilterOption}

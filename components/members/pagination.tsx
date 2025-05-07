@@ -10,32 +10,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { useState } from "react";
 
-interface PaginationProps {
-  pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
-  data: any;
-  cursorStack: any;
-  setCursorStack: any;
-  currentAfter: any;
-  setCurrentAfter: any;
-}
+import { useMembersContext } from "@/contexts/MembersContext";
 
-const Pagination = ({
-  pageSize,
-  setPageSize,
-  data,
-  cursorStack,
-  setCursorStack,
-  currentAfter,
-  setCurrentAfter,
-}: PaginationProps) => {
+const Pagination = () => {
+  const {
+    pageSize,
+    setPageSize,
+    data,
+    cursorStack,
+    setCursorStack,
+    currentAfter,
+    setCurrentAfter,
+  } = useMembersContext();
   // Go to next page
   const handleNextPage = () => {
     if (data.pageInfo.hasNextPage) {
       const nextCursor = data.pageInfo.endCursor;
-      setCursorStack((prev: any) => [...prev, currentAfter ?? ""]);
+      setCursorStack([...cursorStack, currentAfter ?? ""]);
       setCurrentAfter(nextCursor);
     }
   };
@@ -43,7 +35,7 @@ const Pagination = ({
   // Go to previous page
   const handlePrevPage = () => {
     const newStack = [...cursorStack];
-    const prevCursor = newStack.pop() || null;
+    const prevCursor = newStack.pop() || undefined;
     setCursorStack(newStack);
     setCurrentAfter(prevCursor);
   };

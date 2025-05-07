@@ -17,26 +17,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
+import { useMembersContext } from "@/contexts/MembersContext";
 import { useEffect, useState } from "react";
 
 interface ChecklistFilterProps {
   className?: string;
   filters: string[];
   label: string;
-  selectedFilters: any;
   filterKey: string;
-  setSelectedFilters: any;
 }
 
 const ChecklistFilter = ({
   className,
   filters,
   label,
-  selectedFilters,
   filterKey,
-  setSelectedFilters,
 }: ChecklistFilterProps) => {
+  const { selectedFilters, setSelectedFilters } = useMembersContext();
   const [open, setOpen] = useState(false);
   const [tempFilters, setTempFilters] = useState<string[]>(
     selectedFilters[filterKey] || []

@@ -16,42 +16,13 @@ import MembersFilter from "./filters";
 import { format } from "date-fns";
 import { Member } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMembersContext } from "@/contexts/MembersContext";
 
-interface MembersTableProps {
-  members: Member[];
-  pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
-  data: any;
-  cursorStack: any;
-  setCursorStack: any;
-  currentAfter: any;
-  setCurrentAfter: any;
-  selectedFilters: any;
-  setSelectedFilters: any;
-  isLoading: boolean;
-}
-
-const MembersTable = ({
-  members,
-  pageSize,
-  setPageSize,
-  data,
-  cursorStack,
-  setCursorStack,
-  currentAfter,
-  setCurrentAfter,
-  selectedFilters,
-  setSelectedFilters,
-  isLoading,
-}: MembersTableProps) => {
+const MembersTable = () => {
+  const { members, isLoading } = useMembersContext();
   return (
     <div className="overflow-x-auto rounded-lg ">
-      <MembersFilter
-        data={data}
-        setSelectedFilters={setSelectedFilters}
-        selectedFilters={selectedFilters}
-        isLoading={isLoading}
-      />
+      <MembersFilter />
 
       <Table className="w-full border-collapse max-h-[calc(100vh-220px)] border border-neutral-800 ">
         <TableHeader className="bg-primary-foreground sticky top-0">
@@ -171,15 +142,7 @@ const MembersTable = ({
 
       {/* Sticky bottom pagination */}
       <div className="sticky bottom-0 z-20 bg-primary-foreground py-[13px] px-3 border border-neutral-800">
-        <Pagination
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-          data={data}
-          cursorStack={cursorStack}
-          setCursorStack={setCursorStack}
-          currentAfter={currentAfter}
-          setCurrentAfter={setCurrentAfter}
-        />
+        <Pagination />
       </div>
     </div>
   );

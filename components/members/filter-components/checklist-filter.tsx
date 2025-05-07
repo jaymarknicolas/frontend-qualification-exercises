@@ -27,6 +27,7 @@ interface ChecklistFilterProps {
   label: string;
   filterKey: string;
   searchFunction: (value: string) => void;
+  searchValue: string;
 }
 
 const ChecklistFilter = ({
@@ -35,6 +36,7 @@ const ChecklistFilter = ({
   label,
   filterKey,
   searchFunction,
+  searchValue,
 }: ChecklistFilterProps) => {
   const { selectedFilters, setSelectedFilters } = useMembersContext();
   const [open, setOpen] = useState(false);
@@ -52,7 +54,7 @@ const ChecklistFilter = ({
   const handleFilterChange = (key: any, values: any) => {
     setSelectedFilters((prev: any) => ({
       ...prev,
-      [key]: values.length > 0 ? values : undefined,
+      [filterKey]: values.length > 0 ? values : undefined,
     }));
   };
 
@@ -88,6 +90,7 @@ const ChecklistFilter = ({
               const target = e.target as HTMLInputElement;
               searchFunction(target.value);
             }}
+            value={searchValue}
           />
           <CommandList>
             <CommandEmpty>{`No ${label.toLocaleLowerCase()} found.`}</CommandEmpty>

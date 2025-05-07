@@ -19,8 +19,17 @@ import ChecklistFilter from "./filter-components/checklist-filter";
 import { useMembersContext } from "@/contexts/MembersContext";
 
 const MembersFilter = () => {
-  const { data, setSelectedFilters, selectedFilters, isLoading } =
-    useMembersContext();
+  const {
+    setDomainSearch,
+    setEmailSearch,
+    setNameSearch,
+    setMobileSearch,
+    nameSearch,
+    emailSearch,
+    mobileSearch,
+    domainSearch,
+    members,
+  } = useMembersContext();
 
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -32,41 +41,36 @@ const MembersFilter = () => {
   const unique = (array: string[]): string[] => Array.from(new Set(array));
 
   const filterOptions = useMemo(() => {
-    if (!data?.edges) return null;
-
-    const nodes = data.edges.map((edge: any) => edge.node);
-
+    const filters = members ?? [];
+    const getFilters = (key: string) =>
+      unique(filters.map((m: any) => m[key]).filter(Boolean));
     return {
       name: {
         label: "Name",
-        filters: unique(nodes.map((m: any) => m.name).filter(Boolean)),
+        filters: getFilters("name"),
       },
       domain: {
         label: "Domain",
-        filters: unique(nodes.map((m: any) => m.domain).filter(Boolean)),
+        filters: getFilters("domain"),
       },
       emailAddress: {
         label: "Email Address",
-        filters: unique(nodes.map((m: any) => m.emailAddress).filter(Boolean)),
+        filters: getFilters("emailAddress"),
       },
       mobileNumber: {
         label: "Mobile Number",
-        filters: unique(nodes.map((m: any) => m.mobileNumber).filter(Boolean)),
+        filters: getFilters("mobileNumber"),
       },
       verificationStatus: {
         label: "Verification Status",
-        filters: unique(
-          nodes.map((m: any) => m.verificationStatus).filter(Boolean)
-        ),
+        filters: getFilters("verificationStatus"),
       },
       status: {
         label: "Status",
-        filters: unique(nodes.map((m: any) => m.status).filter(Boolean)),
+        filters: getFilters("status"),
       },
     };
-  }, [data]);
-
-  if (!filterOptions || isLoading) return <MembersFilterSkeleton />;
+  }, [members]);
 
   return (
     <div className="border border-neutral-800 bg-primary-foreground p-4 border-b-0">
@@ -84,6 +88,8 @@ const MembersFilter = () => {
               label={filterOptions.name.label}
               filters={filterOptions.name.filters}
               filterKey="name"
+              searchFunction={setNameSearch}
+              searchValue={nameSearch}
             />
             <StatusFilter
               filterKey="verificationStatus"
@@ -94,16 +100,22 @@ const MembersFilter = () => {
               label={filterOptions.emailAddress.label}
               filters={filterOptions.emailAddress.filters}
               filterKey="emailAddress"
+              searchFunction={setEmailSearch}
+              searchValue={emailSearch}
             />
             <ChecklistFilter
               label={filterOptions.mobileNumber.label}
               filters={filterOptions.mobileNumber.filters}
               filterKey="mobileNumber"
+              searchFunction={setMobileSearch}
+              searchValue={mobileSearch}
             />
             <ChecklistFilter
               label={filterOptions.domain.label}
               filters={filterOptions.domain.filters}
               filterKey="domain"
+              searchFunction={setDomainSearch}
+              searchValue={domainSearch}
             />
             <DateRangePicker
               label="Date Registered"
@@ -154,6 +166,8 @@ const MembersFilter = () => {
                 filters={filterOptions.name.filters}
                 className="justify-between"
                 filterKey="name"
+                searchFunction={setNameSearch}
+                searchValue={nameSearch}
               />
               <StatusFilter
                 filterKey="verificationStatus"
@@ -166,18 +180,24 @@ const MembersFilter = () => {
                 filters={filterOptions.emailAddress.filters}
                 className="justify-between"
                 filterKey="emailAddress"
+                searchFunction={setEmailSearch}
+                searchValue={emailSearch}
               />
               <ChecklistFilter
                 label={filterOptions.mobileNumber.label}
                 filters={filterOptions.mobileNumber.filters}
                 className="justify-between"
                 filterKey="mobileNumber"
+                searchFunction={setMobileSearch}
+                searchValue={mobileSearch}
               />
               <ChecklistFilter
                 label={filterOptions.domain.label}
                 filters={filterOptions.domain.filters}
                 className="justify-between"
                 filterKey="domain"
+                searchFunction={setDomainSearch}
+                searchValue={domainSearch}
               />
               <DateRangePicker
                 label="Date Registered"
@@ -208,47 +228,3 @@ const MembersFilter = () => {
 };
 
 export default MembersFilter;
-
-export const MembersFilterSkeleton = () => {
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
-
-  return (
-    <div className="border border-neutral-800 bg-primary-foreground p-4 border-b-0">
-      {isDesktop ? (
-        <div className="flex flex-nowrap items-start gap-2">
-          <div className="mr-2 font-medium flex items-center gap-2 text-base text-white h-fit">
-            <span>Filters</span>
-            <Separator
-              orientation="vertical"
-              className="!h-[30px] !w-0.5 bg-white"
-            />
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Skeleton filters - desktop view */}
-            {Array.from({ length: 8 }).map((_, index) => (
-              <Skeleton
-                key={index}
-                className="h-9 w-[140px] bg-neutral-800/50 rounded-md"
-              />
-            ))}
-          </div>
-        </div>
-      ) : (
-        // Mobile/Tablet view - show filter icon with dropdown
-        <div className="flex items-center justify-between">
-          <div className="font-medium flex items-center gap-2 text-base text-white">
-            <span>Filters</span>
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            className="bg-transparent border-neutral-700 hover:bg-neutral-800 hover:text-white"
-            disabled
-          >
-            <Filter className="h-4 w-4 text-white opacity-50" />
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-};

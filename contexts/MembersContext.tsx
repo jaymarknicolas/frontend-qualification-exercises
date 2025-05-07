@@ -15,6 +15,16 @@ interface MembersContextType {
   setSelectedFilters: (filters: any) => void;
   data: any;
   isLoading: boolean;
+  domainSearch: string;
+  setDomainSearch: React.Dispatch<React.SetStateAction<string>>;
+  emailSearch: string;
+  setEmailSearch: React.Dispatch<React.SetStateAction<string>>;
+  mobileSearch: string;
+  setMobileSearch: React.Dispatch<React.SetStateAction<string>>;
+  nameSearch: string;
+  setNameSearch: React.Dispatch<React.SetStateAction<string>>;
+  filter: any;
+  setFilter: (filter: any) => void;
 }
 
 export const MembersContext = createContext<MembersContextType | undefined>(

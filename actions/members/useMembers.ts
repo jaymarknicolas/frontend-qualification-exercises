@@ -1,7 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getFilteredMembers, getSearchedMembers } from "./actions";
+import {
+  getFilteredMembers,
+  getFilteredMembersByDomain,
+  getFilteredMembersByName,
+  getFilteredMembersByEmailAddress,
+  getFilteredMembersByMobileNumber,
+} from "./actions";
 import { FilterParams, SearchParams } from "@/types";
 
 export function useMembers(params: FilterParams) {
@@ -11,10 +17,39 @@ export function useMembers(params: FilterParams) {
   });
 }
 
-export function useSearchMembers(params: SearchParams) {
+export function useSearchMembersByDomain(params: SearchParams) {
+  if (!params.search) return null;
+
   return useQuery({
-    queryKey: ["membersSearch", params.field, params.search, params.first],
-    queryFn: () => getSearchedMembers(params),
-    enabled: !!params.search.trim(), // avoids running when search is empty
+    queryKey: ["domain", params],
+    queryFn: () => getFilteredMembersByDomain(params),
+  });
+}
+
+export function useSearchMembersByName(params: SearchParams) {
+  console.log(params.search);
+  if (!params.search) return null;
+
+  return useQuery({
+    queryKey: ["name", params],
+    queryFn: () => getFilteredMembersByName(params),
+  });
+}
+
+export function useSearchMembersByEmailAddress(params: SearchParams) {
+  if (!params.search) return null;
+
+  return useQuery({
+    queryKey: ["email_address", params],
+    queryFn: () => getFilteredMembersByEmailAddress(params),
+  });
+}
+
+export function useSearchMembersByMobileNumber(params: SearchParams) {
+  if (!params.search) return null;
+
+  return useQuery({
+    queryKey: ["mobile_number", params],
+    queryFn: () => getFilteredMembersByMobileNumber(params),
   });
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format, addMonths, startOfMonth, subMonths } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // or use your own icons
 import { DayPicker } from "react-day-picker";
@@ -16,6 +16,9 @@ import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getDateRange } from "@/lib/utils";
 import { useMembersContext } from "@/contexts/MembersContext";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface DateRangeFilterProps {
   className?: string;
@@ -182,23 +185,66 @@ const DateRangeFilter = ({
             <div className="border-neutral-800 flex items-center justify-between border-t p-4">
               <div className="flex items-center gap-3 text-white flex-1">
                 <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden">
-                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r">
-                    {format(range.from, "MMM d, yyyy")}
-                  </div>
-                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-l">
-                    {format(range.from, "HH:mm:ss")}
-                  </div>
+                  <DatePicker
+                    open={false}
+                    selected={range.from}
+                    onChange={(date) =>
+                      date &&
+                      setRange((prevRange) => ({ ...prevRange, from: date }))
+                    }
+                    dateFormat="MMM d, yyyy"
+                    placeholderText="Enter date (e.g., May 7, 2025)"
+                    className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r focus-visible:border-none max-w-32 focus-visible:outline-none"
+                  />
+                  <DatePicker
+                    open={false}
+                    selected={range.from}
+                    onChange={(date) =>
+                      date &&
+                      setRange((prevRange) => ({ ...prevRange, from: date }))
+                    }
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={1}
+                    timeCaption="Time"
+                    dateFormat="HH:mm:ss"
+                    placeholderText="Enter time (e.g., 14:30:00)"
+                    className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-l max-w-24 focus-visible:outline-none"
+                  />
                 </div>
 
-                <Separator orientation="horizontal" className="!max-w-2" />
+                <Separator
+                  orientation="horizontal"
+                  className="!max-w-2 bg-[#7B7F83]"
+                />
 
-                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden">
-                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r">
-                    {format(range.to, "MMM d, yyyy")}
-                  </div>
-                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-l">
-                    {format(range.to, "HH:mm:ss")}
-                  </div>
+                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden focus-visible:outline-none">
+                  <DatePicker
+                    open={false}
+                    selected={range.to}
+                    onChange={(date) =>
+                      date &&
+                      setRange((prevRange) => ({ ...prevRange, to: date }))
+                    }
+                    dateFormat="MMM d, yyyy"
+                    placeholderText="Enter date (e.g., May 7, 2025)"
+                    className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r focus-visible:border-none max-w-32 focus-visible:outline-none"
+                  />
+                  <DatePicker
+                    open={false}
+                    selected={range.to}
+                    onChange={(date) =>
+                      date &&
+                      setRange((prevRange) => ({ ...prevRange, to: date }))
+                    }
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={1}
+                    timeCaption="Time"
+                    dateFormat="HH:mm:ss"
+                    placeholderText="Enter time (e.g., 14:30:00)"
+                    className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-l max-w-24 focus-visible:outline-none"
+                  />
                 </div>
               </div>
 
@@ -220,6 +266,7 @@ const DateRangeFilter = ({
             </div>
           </div>
         </div>
+        <div className="w-full md:w-auto"></div>
       </PopoverContent>
     </Popover>
   );
@@ -261,3 +308,32 @@ function CustomCaption({
     </div>
   );
 }
+
+const CustomInput = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLProps<HTMLDivElement>
+>(({ value, onClick }, ref) => {
+  // Split the date-time string to separate date and time parts
+  let datePart = "Select date";
+  let timePart = "00:00:00";
+
+  if (value && typeof value === "string") {
+    const parts = value.split(" ");
+    // Extract date part (everything before the time)
+    datePart = parts.slice(0, -1).join(" ");
+    // Extract time part (last part)
+    timePart = parts[parts.length - 1];
+  }
+
+  return (
+    <div
+      className={`flex items-center w-full h-10 px-3 py-2 rounded-md bg-transparent border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 text-white cursor-pointer `}
+      onClick={onClick}
+      ref={ref}
+    >
+      <div className="flex-1">{datePart}</div>
+      <Separator orientation="vertical" className="mx-2 h-5" />
+      <div>{timePart}</div>
+    </div>
+  );
+});

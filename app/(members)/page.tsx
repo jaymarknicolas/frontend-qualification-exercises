@@ -49,6 +49,10 @@ const Home = () => {
     return Object.keys(output).length ? output : undefined;
   }, [selectedFilters]);
 
+  useEffect(() => {
+    console.log(selectedFilters);
+  }, [selectedFilters]);
+
   const { data, isLoading, isFetching } = useMembers({
     first: pageSize,
     after: currentAfter,

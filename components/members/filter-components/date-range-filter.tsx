@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format, addMonths, startOfMonth, subMonths } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // or use your own icons
 import { DayPicker } from "react-day-picker";
@@ -19,9 +19,20 @@ import { getDateRange } from "@/lib/utils";
 interface DateRangeFilterProps {
   className?: string;
   label: string;
+  setSelectedFilters: any;
+  filterKey: string;
+  selectedDateFilterOption: any;
+  setSelectedDateFilterOption: any;
 }
 
-const DateRangeFilter = ({ label, className }: DateRangeFilterProps) => {
+const DateRangeFilter = ({
+  label,
+  className,
+  setSelectedFilters,
+  filterKey,
+  selectedDateFilterOption,
+  setSelectedDateFilterOption,
+}: DateRangeFilterProps) => {
   const options = [
     "Today",
     "Yesterday",
@@ -36,28 +47,44 @@ const DateRangeFilter = ({ label, className }: DateRangeFilterProps) => {
 
   const [open, setOpen] = useState(false);
   const [range, setRange] = useState<{ from: Date; to: Date }>(
-    getDateRange("This week")
+    getDateRange(selectedDateFilterOption[filterKey])
   );
-  const [selectedOption, setSelectedOption] = useState("This week");
   const [month1, setMonth1] = useState(() => new Date());
   const [month2, setMonth2] = useState(() => addMonths(new Date(), 1));
 
   const handleOptionClick = (label: string) => {
     const range = getDateRange(label);
     setRange(range);
-    setSelectedOption(label);
+    setSelectedDateFilterOption({
+      ...selectedDateFilterOption,
+      [filterKey]: label,
+    });
     if (range?.from) {
       setMonth1(startOfMonth(range.from));
       setMonth2(startOfMonth(addMonths(range.from, 1)));
     }
   };
 
+  const handleDateFilterChange = () => {
+    setSelectedFilters((prev: any) => ({
+      ...prev,
+      [filterKey]: { from: range.from, to: range.to },
+    }));
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (range?.from) {
+      setMonth1(startOfMonth(range.from));
+      setMonth2(startOfMonth(addMonths(range.from, 1)));
+    }
+  }, [range]);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          //   onClick={onClick}
           className={cn(
             "border-neutral-800 bg-primary text-muted-foreground rounded-md text-sm hover:bg-primary hover:text-muted-foreground",
             className
@@ -80,7 +107,7 @@ const DateRangeFilter = ({ label, className }: DateRangeFilterProps) => {
                 onClick={() => handleOptionClick(label)}
                 className={cn(
                   "text-left justify-start rounded-md transition text-neutral-700 px-4 py-2.5 font-normal text-sm hover:bg-[#FBBD2D]",
-                  selectedOption === label
+                  selectedDateFilterOption[filterKey] === label
                     ? "bg-[#FBBD2D] "
                     : "hover:bg-[#FBBD2D]"
                 )}
@@ -183,7 +210,10 @@ const DateRangeFilter = ({ label, className }: DateRangeFilterProps) => {
                 >
                   Cancel
                 </Button>
-                <Button className="border-[#F2BF4E] bg-[#F2BF4E] !text-[#0B1116] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5">
+                <Button
+                  className="border-[#F2BF4E] bg-[#F2BF4E] !text-[#0B1116] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5"
+                  onClick={handleDateFilterChange}
+                >
                   Apply
                 </Button>
               </div>

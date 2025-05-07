@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo } from "react";
 
 import { useMembers } from "@/actions/members/useMembers";
 import { Member } from "@/types";
-
 import MembersTable from "@/components/members/table";
 
 const Home = () => {
@@ -17,19 +16,31 @@ const Home = () => {
 
   const [selectedFilters, setSelectedFilters] = useState<{
     name?: string[];
-    domain?: string[];
+    verificationStatus?: string;
     emailAddress?: string[];
     mobileNumber?: string[];
-    verificationStatus?: string;
+    domain?: string[];
     status?: string;
+    dateTimeCreated?: { from: Date; to: Date };
+    dateTimeLastActive?: { from: Date; to: Date };
   }>({});
 
-  // Transform checkbox values to GraphQL `in` filters
   const filter = useMemo(() => {
     const output: Record<string, any> = {};
 
     Object.entries(selectedFilters).forEach(([key, value]) => {
-      if (Array.isArray(value) && value.length > 0) {
+      if (
+        (key === "dateTimeCreated" || key === "dateTimeLastActive") &&
+        value &&
+        typeof value === "object" &&
+        "from" in value &&
+        "to" in value
+      ) {
+        output[key] = {
+          greaterThanOrEqual: value.from.toISOString(),
+          lesserThanOrEqual: value.to.toISOString(),
+        };
+      } else if (Array.isArray(value) && value.length > 0) {
         output[key] = { in: value };
       } else if (typeof value === "string" && value.trim() !== "") {
         output[key] = { equal: value };
@@ -49,11 +60,8 @@ const Home = () => {
     // Extract the members' data from the API response
     const members = data?.edges?.map((edge: any) => edge.node) || [];
     setMembers(members);
+    console.log(members.length);
   }, [data, isLoading, isFetching]);
-
-  useEffect(() => {
-    console.log(filter);
-  }, [selectedFilters]);
 
   return (
     <div className="flex flex-col">
@@ -77,6 +85,7 @@ const Home = () => {
             data={data}
             setSelectedFilters={setSelectedFilters}
             selectedFilters={selectedFilters}
+            isLoading={isLoading}
           />
         </div>
       </div>

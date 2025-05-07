@@ -28,6 +28,7 @@ interface MembersTableProps {
   setCurrentAfter: any;
   selectedFilters: any;
   setSelectedFilters: any;
+  isLoading: boolean;
 }
 
 const MembersTable = ({
@@ -41,6 +42,7 @@ const MembersTable = ({
   setCurrentAfter,
   selectedFilters,
   setSelectedFilters,
+  isLoading,
 }: MembersTableProps) => {
   return (
     <div className="overflow-x-auto rounded-lg ">
@@ -48,6 +50,7 @@ const MembersTable = ({
         data={data}
         setSelectedFilters={setSelectedFilters}
         selectedFilters={selectedFilters}
+        isLoading={isLoading}
       />
 
       <Table className="w-full border-collapse max-h-[calc(100vh-220px)] border border-neutral-800 ">
@@ -82,9 +85,11 @@ const MembersTable = ({
             </TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody className="bg-secondary">
-          {members?.length
-            ? members.map((member) => (
+          {!isLoading ? (
+            members.length > 0 ? (
+              members.map((member) => (
                 <TableRow
                   key={member.id}
                   className="border-neutral-800 hover:bg-gray-900/30leading-5 "
@@ -118,37 +123,49 @@ const MembersTable = ({
                   </TableCell>
                 </TableRow>
               ))
-            : Array.from({ length: 10 }).map((_, index) => (
-                <TableRow className="border-neutral-800 hover:bg-gray-900/30leading-5 ">
-                  <TableCell className="font-medium text-[#FBBD2C] text-sm  px-6 py-4 ">
-                    <Skeleton className="h-5 w-24 bg-slate-800" />
-                  </TableCell>
-                  <TableCell className=" px-6 py-4 ">
-                    <Skeleton className="h-6 w-20 rounded-full bg-slate-800" />
-                  </TableCell>
-                  <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
-                    <Skeleton className="h-5 w-16 bg-slate-800" />
-                  </TableCell>
-                  <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
-                    <Skeleton className="h-5 w-40 bg-slate-800" />
-                  </TableCell>
-                  <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
-                    <Skeleton className="h-5 w-32 bg-slate-800" />
-                  </TableCell>
-                  <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
-                    <Skeleton className="h-5 w-40 bg-slate-800" />
-                  </TableCell>
-                  <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
-                    <Skeleton className="h-5 w-40 bg-slate-800" />
-                  </TableCell>
-                  <TableCell className=" px-6 py-4 ">
-                    <Skeleton className="h-6 w-20 rounded-full bg-slate-800" />
-                  </TableCell>
-                  <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
-                    <Skeleton className="h-5 w-40 bg-slate-800" />
-                  </TableCell>
-                </TableRow>
-              ))}
+            ) : (
+              <TableRow>
+                <TableCell colSpan={9} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )
+          ) : (
+            Array.from({ length: 10 }).map((_, index) => (
+              <TableRow
+                className="border-neutral-800 hover:bg-gray-900/30leading-5 "
+                key={index}
+              >
+                <TableCell className="font-medium text-[#FBBD2C] text-sm  px-6 py-4 ">
+                  <Skeleton className="h-5 w-24 bg-slate-800" />
+                </TableCell>
+                <TableCell className=" px-6 py-4 ">
+                  <Skeleton className="h-6 w-20 rounded-full bg-slate-800" />
+                </TableCell>
+                <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
+                  <Skeleton className="h-5 w-16 bg-slate-800" />
+                </TableCell>
+                <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
+                  <Skeleton className="h-5 w-40 bg-slate-800" />
+                </TableCell>
+                <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
+                  <Skeleton className="h-5 w-32 bg-slate-800" />
+                </TableCell>
+                <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
+                  <Skeleton className="h-5 w-40 bg-slate-800" />
+                </TableCell>
+                <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
+                  <Skeleton className="h-5 w-40 bg-slate-800" />
+                </TableCell>
+                <TableCell className=" px-6 py-4 ">
+                  <Skeleton className="h-6 w-20 rounded-full bg-slate-800" />
+                </TableCell>
+                <TableCell className="text-foreground text-sm font-normal  px-6 py-4 ">
+                  <Skeleton className="h-5 w-40 bg-slate-800" />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
 

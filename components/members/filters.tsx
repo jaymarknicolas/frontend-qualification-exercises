@@ -21,15 +21,21 @@ interface MembersFilterProps {
   data: any;
   setSelectedFilters: any;
   selectedFilters: any;
+  isLoading: boolean;
 }
 
 const MembersFilter = ({
   data,
   setSelectedFilters,
   selectedFilters,
+  isLoading,
 }: MembersFilterProps) => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const [selectedDateFilterOption, setSelectedDateFilterOption] = useState({
+    dateTimeCreated: "This week",
+    dateTimeLastActive: "This week",
+  });
 
   const unique = (array: string[]): string[] => Array.from(new Set(array));
 
@@ -68,7 +74,7 @@ const MembersFilter = ({
     };
   }, [data]);
 
-  if (!filterOptions) return <MembersFilterSkeleton />;
+  if (!filterOptions || isLoading) return <MembersFilterSkeleton />;
 
   return (
     <div className="border border-neutral-800 bg-primary-foreground p-4 border-b-0">
@@ -117,7 +123,13 @@ const MembersFilter = ({
               filters={filterOptions.domain.filters}
               filterKey="domain"
             />
-            <DateRangePicker label="Date Registered" />
+            <DateRangePicker
+              label="Date Registered"
+              setSelectedFilters={setSelectedFilters}
+              filterKey="dateTimeCreated"
+              selectedDateFilterOption={selectedDateFilterOption}
+              setSelectedDateFilterOption={setSelectedDateFilterOption}
+            />
             <StatusFilter
               setSelectedFilters={setSelectedFilters}
               selectedFilters={selectedFilters}
@@ -125,7 +137,13 @@ const MembersFilter = ({
               label={filterOptions.status.label}
               filters={filterOptions.status.filters}
             />
-            <DateRangePicker label="Date and Time Last Active" />
+            <DateRangePicker
+              label="Date and Time Last Active"
+              setSelectedFilters={setSelectedFilters}
+              filterKey="dateTimeLastActive"
+              selectedDateFilterOption={selectedDateFilterOption}
+              setSelectedDateFilterOption={setSelectedDateFilterOption}
+            />
           </div>
         </div>
       ) : (
@@ -196,6 +214,10 @@ const MembersFilter = ({
               <DateRangePicker
                 label="Date Registered"
                 className="justify-between"
+                setSelectedFilters={setSelectedFilters}
+                filterKey="dateTimeCreated"
+                selectedDateFilterOption={selectedDateFilterOption}
+                setSelectedDateFilterOption={setSelectedDateFilterOption}
               />
               <StatusFilter
                 setSelectedFilters={setSelectedFilters}
@@ -208,6 +230,10 @@ const MembersFilter = ({
               <DateRangePicker
                 label="Date and Time Last Active"
                 className="justify-between"
+                setSelectedFilters={setSelectedFilters}
+                filterKey="dateTimeLastActive"
+                selectedDateFilterOption={selectedDateFilterOption}
+                setSelectedDateFilterOption={setSelectedDateFilterOption}
               />
             </div>
           </SheetContent>

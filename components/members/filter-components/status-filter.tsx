@@ -9,6 +9,8 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+
+import { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -19,11 +21,38 @@ interface StatusFilterProps {
   className?: string;
   filters: string[];
   label: string;
+  selectedFilters: any;
+  filterKey: string;
+  setSelectedFilters: any;
 }
 
-const StatusFilter = ({ label, filters, className }: StatusFilterProps) => {
+const StatusFilter = ({
+  label,
+  filters,
+  className,
+  selectedFilters,
+  filterKey,
+  setSelectedFilters,
+}: StatusFilterProps) => {
+  const [open, setOpen] = useState(false);
+  const [tempValue, setTempValue] = useState<string | undefined>(
+    selectedFilters[filterKey]
+  );
+
+  const handleFilterChange = (key: any, value: any) => {
+    setSelectedFilters((prev: any) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+  useEffect(() => {
+    if (!open) {
+      handleFilterChange(filterKey, tempValue);
+    }
+  }, [open]);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -50,6 +79,10 @@ const StatusFilter = ({ label, filters, className }: StatusFilterProps) => {
                     value={filter}
                     key={index}
                     className=" px-4 text-white  gap-3 py-2.5 "
+                    onSelect={() => {
+                      setTempValue(filter === tempValue ? undefined : filter);
+                      setOpen(false); // close popover on select
+                    }}
                   >
                     {filter}
                   </CommandItem>

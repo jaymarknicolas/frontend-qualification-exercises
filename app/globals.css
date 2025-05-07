@@ -208,8 +208,4 @@
   input[type="date"]::-ms-expand {
     display: none;
   }
-
-  /* .table-container {
-    @apply max-h-[768px];
-  } */
 }

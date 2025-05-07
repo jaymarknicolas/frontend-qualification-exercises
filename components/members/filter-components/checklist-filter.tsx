@@ -24,18 +24,18 @@ interface ChecklistFilterProps {
   className?: string;
   filters: string[];
   label: string;
-  handleFilterChange: any;
   selectedFilters: any;
   filterKey: string;
+  setSelectedFilters: any;
 }
 
 const ChecklistFilter = ({
   className,
   filters,
   label,
-  handleFilterChange,
   selectedFilters,
   filterKey,
+  setSelectedFilters,
 }: ChecklistFilterProps) => {
   const [open, setOpen] = useState(false);
   const [tempFilters, setTempFilters] = useState<string[]>(
@@ -48,6 +48,13 @@ const ChecklistFilter = ({
       handleFilterChange(filterKey, tempFilters);
     }
   }, [open]);
+
+  const handleFilterChange = (key: any, values: any) => {
+    setSelectedFilters((prev: any) => ({
+      ...prev,
+      [key]: values.length > 0 ? values : undefined,
+    }));
+  };
 
   const toggleValue = (value: string) => {
     setTempFilters((prev) =>

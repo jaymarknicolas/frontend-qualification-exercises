@@ -83,59 +83,45 @@ const MembersFilter = ({
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <ChecklistFilter
+              setSelectedFilters={setSelectedFilters}
               selectedFilters={selectedFilters}
               label={filterOptions.name.label}
               filters={filterOptions.name.filters}
-              handleFilterChange={(key: any, values: any) => {
-                setSelectedFilters((prev: any) => ({
-                  ...prev,
-                  [key]: values.length > 0 ? values : undefined,
-                }));
-              }}
               filterKey="name"
             />
             <StatusFilter
+              setSelectedFilters={setSelectedFilters}
+              selectedFilters={selectedFilters}
+              filterKey="verificationStatus"
               label={filterOptions.verificationStatus.label}
               filters={filterOptions.verificationStatus.filters}
             />
             <ChecklistFilter
+              setSelectedFilters={setSelectedFilters}
               selectedFilters={selectedFilters}
               label={filterOptions.emailAddress.label}
               filters={filterOptions.emailAddress.filters}
-              handleFilterChange={(key: any, values: any) => {
-                setSelectedFilters((prev: any) => ({
-                  ...prev,
-                  [key]: values.length > 0 ? values : undefined,
-                }));
-              }}
               filterKey="emailAddress"
             />
             <ChecklistFilter
+              setSelectedFilters={setSelectedFilters}
               selectedFilters={selectedFilters}
               label={filterOptions.mobileNumber.label}
               filters={filterOptions.mobileNumber.filters}
-              handleFilterChange={(key: any, values: any) => {
-                setSelectedFilters((prev: any) => ({
-                  ...prev,
-                  [key]: values.length > 0 ? values : undefined,
-                }));
-              }}
               filterKey="mobileNumber"
             />
             <ChecklistFilter
+              setSelectedFilters={setSelectedFilters}
               selectedFilters={selectedFilters}
-              handleFilterChange={(key: any, values: any) => {
-                setSelectedFilters((prev: any) => ({
-                  ...prev,
-                  [key]: values.length > 0 ? values : undefined,
-                }));
-              }}
               label={filterOptions.domain.label}
               filters={filterOptions.domain.filters}
               filterKey="domain"
             />
             <DateRangePicker label="Date Registered" />
             <StatusFilter
+              setSelectedFilters={setSelectedFilters}
+              selectedFilters={selectedFilters}
+              filterKey="status"
               label={filterOptions.status.label}
               filters={filterOptions.status.filters}
             />
@@ -168,57 +154,40 @@ const MembersFilter = ({
             </div>
             <div className="grid gap-3">
               <ChecklistFilter
+                setSelectedFilters={setSelectedFilters}
                 selectedFilters={selectedFilters}
-                handleFilterChange={(key: any, values: any) => {
-                  setSelectedFilters((prev: any) => ({
-                    ...prev,
-                    [key]: values.length > 0 ? values : undefined,
-                  }));
-                }}
                 label={filterOptions.name.label}
                 filters={filterOptions.name.filters}
                 className="justify-between"
                 filterKey="name"
               />
               <StatusFilter
+                setSelectedFilters={setSelectedFilters}
+                selectedFilters={selectedFilters}
+                filterKey="verificationStatus"
                 label={filterOptions.verificationStatus.label}
                 filters={filterOptions.verificationStatus.filters}
                 className="justify-between"
               />
               <ChecklistFilter
+                setSelectedFilters={setSelectedFilters}
                 selectedFilters={selectedFilters}
-                handleFilterChange={(key: any, values: any) => {
-                  setSelectedFilters((prev: any) => ({
-                    ...prev,
-                    [key]: values.length > 0 ? values : undefined,
-                  }));
-                }}
                 label={filterOptions.emailAddress.label}
                 filters={filterOptions.emailAddress.filters}
                 className="justify-between"
                 filterKey="emailAddress"
               />
               <ChecklistFilter
+                setSelectedFilters={setSelectedFilters}
                 selectedFilters={selectedFilters}
-                handleFilterChange={(key: any, values: any) => {
-                  setSelectedFilters((prev: any) => ({
-                    ...prev,
-                    [key]: values.length > 0 ? values : undefined,
-                  }));
-                }}
                 label={filterOptions.mobileNumber.label}
                 filters={filterOptions.mobileNumber.filters}
                 className="justify-between"
                 filterKey="mobileNumber"
               />
               <ChecklistFilter
+                setSelectedFilters={setSelectedFilters}
                 selectedFilters={selectedFilters}
-                handleFilterChange={(key: any, values: any) => {
-                  setSelectedFilters((prev: any) => ({
-                    ...prev,
-                    [key]: values.length > 0 ? values : undefined,
-                  }));
-                }}
                 label={filterOptions.domain.label}
                 filters={filterOptions.domain.filters}
                 className="justify-between"
@@ -229,6 +198,9 @@ const MembersFilter = ({
                 className="justify-between"
               />
               <StatusFilter
+                setSelectedFilters={setSelectedFilters}
+                selectedFilters={selectedFilters}
+                filterKey="status"
                 label={filterOptions.status.label}
                 filters={filterOptions.status.filters}
                 className="justify-between"

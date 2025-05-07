@@ -20,18 +20,22 @@ const Home = () => {
     domain?: string[];
     emailAddress?: string[];
     mobileNumber?: string[];
-    verificationStatus?: string[];
-    status?: string[];
+    verificationStatus?: string;
+    status?: string;
   }>({});
 
   // Transform checkbox values to GraphQL `in` filters
   const filter = useMemo(() => {
     const output: Record<string, any> = {};
-    Object.entries(selectedFilters).forEach(([key, values]) => {
-      if (Array.isArray(values) && values.length > 0) {
-        output[key] = { in: values }; // Only use `in` operator
+
+    Object.entries(selectedFilters).forEach(([key, value]) => {
+      if (Array.isArray(value) && value.length > 0) {
+        output[key] = { in: value };
+      } else if (typeof value === "string" && value.trim() !== "") {
+        output[key] = { equal: value };
       }
     });
+
     return Object.keys(output).length > 0 ? output : undefined;
   }, [selectedFilters]);
 
@@ -47,23 +51,9 @@ const Home = () => {
     setMembers(members);
   }, [data, isLoading, isFetching]);
 
-  const handleFilterChange = (
-    key: keyof typeof selectedFilters,
-    value: string,
-    checked: boolean
-  ) => {
-    setSelectedFilters((prev) => {
-      const current = prev[key] || [];
-
-      const updated = checked
-        ? [...current, value] // Add if checked
-        : current.filter((v) => v !== value); // Remove if unchecked
-      return {
-        ...prev,
-        [key]: updated.length > 0 ? updated : undefined, // Remove key if empty
-      };
-    });
-  };
+  useEffect(() => {
+    console.log(filter);
+  }, [selectedFilters]);
 
   return (
     <div className="flex flex-col">

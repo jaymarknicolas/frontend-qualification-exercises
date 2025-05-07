@@ -16,12 +16,12 @@ import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getDateRange } from "@/lib/utils";
 
-interface DateRangePickerProps {
+interface DateRangeFilterProps {
   className?: string;
   label: string;
 }
 
-const DateRangePicker = ({ label, className }: DateRangePickerProps) => {
+const DateRangeFilter = ({ label, className }: DateRangeFilterProps) => {
   const options = [
     "Today",
     "Yesterday",
@@ -195,7 +195,7 @@ const DateRangePicker = ({ label, className }: DateRangePickerProps) => {
   );
 };
 
-export default DateRangePicker;
+export default DateRangeFilter;
 
 function CustomCaption({
   displayMonth,

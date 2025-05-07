@@ -18,19 +18,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const data = [
-  "https://scaleforge.tech",
-  "https://crazywin.ph/19",
-  "https://crazywin.opexasystem.com",
-  "https://crazywin.ph/219",
-  "https://crazywin.ph",
-] as const;
-
-interface FilterDomainProps {
+interface ChecklistFilterProps {
   className?: string;
+  filters: string[];
+  label: string;
 }
 
-const FilterDomain = ({ className }: FilterDomainProps) => {
+const ChecklistFilter = ({
+  className,
+  filters,
+  label,
+}: ChecklistFilterProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -42,7 +40,7 @@ const FilterDomain = ({ className }: FilterDomainProps) => {
             className
           )}
         >
-          Domain
+          {label}
           <ChevronDown className="ml-2 h-4 w-4 text-neutral-400" />
         </Button>
       </PopoverTrigger>
@@ -51,20 +49,21 @@ const FilterDomain = ({ className }: FilterDomainProps) => {
         align="start"
       >
         <Command>
-          <CommandInput placeholder="Search Domain" className="h-9" />
+          <CommandInput placeholder={`Search ${label}`} className="h-9" />
           <CommandList>
-            <CommandEmpty>No domain found.</CommandEmpty>
+            <CommandEmpty>{`No ${label.toLocaleLowerCase()} found.`}</CommandEmpty>
             <CommandGroup className="p-0">
-              {data.map((item, index) => (
-                <CommandItem
-                  value={item}
-                  key={index}
-                  className=" px-4 text-warning  gap-3 py-2.5"
-                >
-                  <Checkbox />
-                  {item}
-                </CommandItem>
-              ))}
+              {filters &&
+                filters.map((filter, index) => (
+                  <CommandItem
+                    value={filter}
+                    key={index}
+                    className=" px-4 text-warning  gap-3 py-2.5"
+                  >
+                    <Checkbox />
+                    {filter}
+                  </CommandItem>
+                ))}
             </CommandGroup>
           </CommandList>
         </Command>
@@ -73,4 +72,4 @@ const FilterDomain = ({ className }: FilterDomainProps) => {
   );
 };
 
-export default FilterDomain;
+export default ChecklistFilter;

@@ -19,7 +19,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
 
 const languages = [
   { label: "English", value: "en" },
@@ -40,7 +39,6 @@ interface FilterButtonProps {
 }
 
 const FilterButton = ({ label, onClick, className }: FilterButtonProps) => {
-  const [search, setSearch] = useState("");
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -49,8 +47,7 @@ const FilterButton = ({ label, onClick, className }: FilterButtonProps) => {
           onClick={onClick}
           className={cn(
             "border-neutral-800 bg-primary text-neutral-600 rounded-md text-sm hover:bg-primary hover:text-neutral-600",
-            className,
-            !search && "text-muted-foreground"
+            className
           )}
         >
           {label}

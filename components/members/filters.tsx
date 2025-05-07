@@ -1,10 +1,9 @@
 "use client";
 
-import FilterButton from "./filter-button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Filter, X } from "lucide-react";
+import { Filter } from "lucide-react";
 // hooks
 import { useState } from "react";
 

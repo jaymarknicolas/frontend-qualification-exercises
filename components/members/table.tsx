@@ -104,7 +104,7 @@ export function MembersDataTable({ members }: DataTableProps) {
 
       {/* Sticky bottom pagination */}
       <div className="sticky bottom-0 z-20 bg-primary-foreground py-[13px] px-3 border border-neutral-800">
-        <DataTablePagination members={members} />
+        <DataTablePagination />
       </div>
     </div>
   );

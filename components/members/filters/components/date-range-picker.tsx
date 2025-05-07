@@ -16,8 +16,6 @@ import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getDateRange } from "@/lib/utils";
 
-// utils
-import { useMediaQuery } from "@/hooks/use-media-query";
 interface DateRangePickerProps {
   className?: string;
   label: string;
@@ -99,8 +97,16 @@ const DateRangePicker = ({ label, className }: DateRangePickerProps) => {
                 <DayPicker
                   mode="range"
                   selected={range}
-                  // @ts-ignore
-                  onSelect={setRange}
+                  onSelect={(range) => {
+                    if (range) {
+                      if (range) {
+                        setRange({
+                          from: range.from ?? new Date(),
+                          to: range.to ?? new Date(),
+                        });
+                      }
+                    }
+                  }}
                   month={month1}
                   onMonthChange={setMonth1}
                   components={{
@@ -119,8 +125,16 @@ const DateRangePicker = ({ label, className }: DateRangePickerProps) => {
                 <DayPicker
                   mode="range"
                   selected={range}
-                  // @ts-ignore
-                  onSelect={setRange}
+                  onSelect={(range) => {
+                    if (range) {
+                      if (range) {
+                        setRange({
+                          from: range.from ?? new Date(),
+                          to: range.to ?? new Date(),
+                        });
+                      }
+                    }
+                  }}
                   month={month2}
                   onMonthChange={setMonth2}
                   components={{

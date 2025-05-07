@@ -1,6 +1,5 @@
 "use client";
 
-import type { Table } from "@tanstack/react-table";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -11,14 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Member } from "@/data/members";
 import { useState } from "react";
 
-interface DataTablePaginationProps {
-  members: Member[];
-}
-
-export function DataTablePagination({ members }: DataTablePaginationProps) {
+export function DataTablePagination() {
   const [page, setPage] = useState<string>("10 Entries");
   return (
     <div className="flex items-stretch justify-between md:justify-end gap-3 flex-wrap">

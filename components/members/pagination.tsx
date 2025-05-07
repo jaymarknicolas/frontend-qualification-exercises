@@ -51,7 +51,7 @@ const Pagination = () => {
             setCurrentAfter(undefined); // Reset pagination when page size changes
           }}
         >
-          <SelectTrigger className="border-gray-800 bg-primary-foreground text-white text-sm font-semibold px-4 py-2.5 w-[180px]">
+          <SelectTrigger className="flex-1 border-gray-800 bg-primary-foreground text-white text-sm font-semibold px-4 py-2.5 w-[180px]">
             <SelectValue placeholder={`${pageSize} Entries`} />
           </SelectTrigger>
           <SelectContent className="border-gray-800 bg-primary-foreground text-white text-sm font-semibold">

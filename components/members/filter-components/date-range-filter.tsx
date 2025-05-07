@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { format, addMonths, startOfMonth, subMonths } from "date-fns";
+import { addMonths, startOfMonth, subMonths } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // or use your own icons
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
@@ -19,6 +19,14 @@ import { useMembersContext } from "@/contexts/MembersContext";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DateRangeFilterProps {
   className?: string;
@@ -89,7 +97,7 @@ const DateRangeFilter = ({
         <Button
           variant="outline"
           className={cn(
-            "border-neutral-800 bg-primary text-muted-foreground rounded-md text-sm hover:bg-primary hover:text-muted-foreground",
+            " border-neutral-800 bg-primary text-muted-foreground rounded-md text-sm hover:bg-primary hover:text-muted-foreground",
             className
           )}
         >
@@ -98,12 +106,12 @@ const DateRangeFilter = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-full  p-0 border-none rounded-[4px] bg-primary"
+        className="w-full  p-0 border-none rounded-[4px] bg-primary -translate-y-6/12 lg:translate-none"
         align="end"
       >
-        <div className="flex bg-primary text-white rounded-lg shadow-lg">
+        <div className="bg-primary text-white rounded-lg shadow-lg flex-col lg:flex-row">
           {/* Sidebar */}
-          <div className="flex flex-col w-48 p-4 border-r border-neutral-800 gap-y-1">
+          <div className="  flex-col w-48 p-4 border-r border-neutral-800 gap-y-1 hidden lg:flex">
             {options.map((label) => (
               <Button
                 key={label}
@@ -119,7 +127,34 @@ const DateRangeFilter = ({
               </Button>
             ))}
           </div>
-
+          <div className="  flex-col w-full lg:w-48 p-4 gap-y-1 flex lg:hidden">
+            <Select
+              value={selectedDateFilterOption[filterKey]}
+              onValueChange={(value) => {
+                handleOptionClick(value);
+              }}
+            >
+              <SelectTrigger className="border-gray-800 bg-primary-foreground text-white text-sm font-semibold px-4 py-2.5 w-full">
+                <SelectValue placeholder={label} />
+              </SelectTrigger>
+              <SelectContent className="border-gray-800 bg-primary-foreground text-white text-sm font-semibold">
+                {options.map((label, index) => (
+                  <SelectItem
+                    key={index}
+                    value={label}
+                    className={cn(
+                      "hover:bg-white hover:text-gray-900",
+                      selectedDateFilterOption[filterKey] === label
+                        ? "bg-[#FBBD2D] "
+                        : "hover:bg-[#FBBD2D]"
+                    )}
+                  >
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex flex-col">
             {/* Calendars */}
             <div className="flex gap-4">
@@ -151,7 +186,7 @@ const DateRangeFilter = ({
                   showOutsideDays
                 />
               </div>
-              <div className=" px-6">
+              <div className="hidden lg:block px-6">
                 <DayPicker
                   mode="range"
                   selected={range}
@@ -182,9 +217,9 @@ const DateRangeFilter = ({
             </div>
 
             {/* Time & Actions */}
-            <div className="border-neutral-800 flex items-center justify-between border-t p-4">
-              <div className="flex items-center gap-3 text-white flex-1">
-                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden">
+            <div className="border-neutral-800 flex items-center justify-between border-t p-4 flex-col lg:flex-row gap-4">
+              <div className="flex items-center gap-3 text-white flex-1 flex-col lg:flex-row w-full">
+                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden w-full">
                   <DatePicker
                     open={false}
                     selected={range.from}
@@ -194,7 +229,7 @@ const DateRangeFilter = ({
                     }
                     dateFormat="MMM d, yyyy"
                     placeholderText="Enter date (e.g., May 7, 2025)"
-                    className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r focus-visible:border-none max-w-32 focus-visible:outline-none"
+                    className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r focus-visible:border-none max-w-32 focus-visible:outline-none "
                   />
                   <DatePicker
                     open={false}
@@ -215,10 +250,10 @@ const DateRangeFilter = ({
 
                 <Separator
                   orientation="horizontal"
-                  className="!max-w-2 bg-[#7B7F83]"
+                  className="!max-w-2 bg-[#7B7F83] hidden lg:block"
                 />
 
-                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden focus-visible:outline-none">
+                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden  w-full">
                   <DatePicker
                     open={false}
                     selected={range.to}
@@ -248,16 +283,16 @@ const DateRangeFilter = ({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-3 lg:mt-0 w-full lg:w-auto">
                 <Button
                   variant="outline"
-                  className="border-[#7F6832] !text-[#F2BF4E] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5"
+                  className="flex-1 lg:flex-auto h-full border-[#7F6832] !text-[#F2BF4E] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5"
                   onClick={() => setOpen(false)}
                 >
                   Cancel
                 </Button>
                 <Button
-                  className="border-[#F2BF4E] bg-[#F2BF4E] !text-[#0B1116] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5"
+                  className="flex-1 lg:flex-auto h-full border-[#F2BF4E] bg-[#F2BF4E] !text-[#0B1116] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5"
                   onClick={handleDateFilterChange}
                 >
                   Apply

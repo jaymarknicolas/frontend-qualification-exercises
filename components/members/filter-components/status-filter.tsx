@@ -66,7 +66,7 @@ const StatusFilter = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[240px] p-0 border-none rounded-[4px]"
+        className="w-auto p-0 border-none rounded-[4px]"
         align="start"
       >
         <Command>

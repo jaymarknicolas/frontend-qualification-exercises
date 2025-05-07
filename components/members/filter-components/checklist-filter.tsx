@@ -79,7 +79,7 @@ const ChecklistFilter = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[240px] p-0 border-none rounded-[4px] py-4"
+        className="w-auto p-0 border-none rounded-[4px] py-4"
         align="start"
       >
         <Command>

@@ -18,23 +18,48 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { useEffect, useState } from "react";
+
 interface ChecklistFilterProps {
   className?: string;
   filters: string[];
   label: string;
+  handleFilterChange: any;
+  selectedFilters: any;
+  filterKey: string;
 }
 
 const ChecklistFilter = ({
   className,
   filters,
   label,
+  handleFilterChange,
+  selectedFilters,
+  filterKey,
 }: ChecklistFilterProps) => {
+  const [open, setOpen] = useState(false);
+  const [tempFilters, setTempFilters] = useState<string[]>(
+    selectedFilters[filterKey] || []
+  );
+
+  // Apply filters only when popover closes
+  useEffect(() => {
+    if (!open) {
+      handleFilterChange(filterKey, tempFilters);
+    }
+  }, [open]);
+
+  const toggleValue = (value: string) => {
+    setTempFilters((prev) =>
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+    );
+  };
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          //   onClick={onClick}
           className={cn(
             "border-neutral-800 bg-primary text-muted-foreground rounded-md text-sm hover:bg-primary hover:text-muted-foreground",
             className
@@ -60,7 +85,10 @@ const ChecklistFilter = ({
                     key={index}
                     className=" px-4 text-warning  gap-3 py-2.5"
                   >
-                    <Checkbox />
+                    <Checkbox
+                      checked={tempFilters.includes(filter)}
+                      onCheckedChange={() => toggleValue(filter)}
+                    />
                     {filter}
                   </CommandItem>
                 ))}

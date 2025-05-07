@@ -2,7 +2,7 @@
 
 import { CircleCheck, CircleAlert, Ban } from "lucide-react";
 
-type StatusType = "active" | "blacklisted" | "disabled";
+import { StatusType } from "@/types";
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -35,7 +35,10 @@ const statusConfig = {
   },
 };
 
-export function StatusBadge({ status = "disabled" }: StatusBadgeProps) {
+export function StatusBadge({ status }: StatusBadgeProps) {
+  const config = statusConfig[status.toLowerCase() as StatusType];
+  if (!config) return null;
+
   const {
     textColor,
     bgColor,
@@ -43,7 +46,7 @@ export function StatusBadge({ status = "disabled" }: StatusBadgeProps) {
     icon: Icon,
     iconColor,
     label,
-  } = statusConfig[status];
+  } = config;
 
   return (
     <div

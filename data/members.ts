@@ -1,15 +1,4 @@
-export interface Member {
-  id: number;
-  name: string;
-  verificationStatus: "verified" | "unverified" | "pending";
-  balance: string;
-  email: string;
-  mobile: string;
-  domain: string;
-  dateRegistered: string;
-  status: "active" | "blacklisted" | "disabled";
-  lastActive: string;
-}
+import { Member } from "@/types";
 
 // Function to generate random data
 function generateRandomMember(id: number): Member {
@@ -117,12 +106,15 @@ function generateRandomMember(id: number): Member {
         Math.floor(Math.random() * verificationStatuses.length)
       ],
     balance,
-    email,
-    mobile: phoneFormats[Math.floor(Math.random() * phoneFormats.length)],
+    emailAddress: email,
+    mobileNumber: phoneFormats[Math.floor(Math.random() * phoneFormats.length)],
     domain: domains[Math.floor(Math.random() * domains.length)],
-    dateRegistered,
+    dateTimeCreated: dateRegistered,
     status: statuses[Math.floor(Math.random() * statuses.length)],
-    lastActive,
+    dateTimeLastActive: lastActive,
+    wallet: {
+      balance,
+    },
   };
 }
 

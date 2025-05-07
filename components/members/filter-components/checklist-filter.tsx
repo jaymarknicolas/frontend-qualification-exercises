@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import {
   Command,
   CommandEmpty,
@@ -25,6 +26,7 @@ interface ChecklistFilterProps {
   filters: string[];
   label: string;
   filterKey: string;
+  searchFunction: (value: string) => void;
 }
 
 const ChecklistFilter = ({
@@ -32,6 +34,7 @@ const ChecklistFilter = ({
   filters,
   label,
   filterKey,
+  searchFunction,
 }: ChecklistFilterProps) => {
   const { selectedFilters, setSelectedFilters } = useMembersContext();
   const [open, setOpen] = useState(false);
@@ -78,7 +81,14 @@ const ChecklistFilter = ({
         align="start"
       >
         <Command>
-          <CommandInput placeholder={`Search ${label}`} className="h-9" />
+          <CommandInput
+            placeholder={`Search ${label}`}
+            className="h-9"
+            onChangeCapture={(e) => {
+              const target = e.target as HTMLInputElement;
+              searchFunction(target.value);
+            }}
+          />
           <CommandList>
             <CommandEmpty>{`No ${label.toLocaleLowerCase()} found.`}</CommandEmpty>
             <CommandGroup className="p-0">

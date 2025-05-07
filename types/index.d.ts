@@ -48,7 +48,6 @@ export type FilterParams = {
 };
 
 export type SearchParams = {
-  field: "name" | "emailAddress" | "mobileNumber" | "domain";
   search: string;
   first: number;
 };

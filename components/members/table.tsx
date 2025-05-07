@@ -59,7 +59,7 @@ const MembersTable = () => {
 
         <TableBody className="bg-secondary">
           {!isLoading ? (
-            members.length > 0 ? (
+            members && members.length > 0 ? (
               members.map((member) => (
                 <TableRow
                   key={member.id}

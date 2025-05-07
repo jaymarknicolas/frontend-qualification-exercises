@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { SearchIcon } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -25,6 +27,8 @@ interface ChecklistFilterProps {
   filters: string[];
   label: string;
   filterKey: string;
+  searchFunction: (value: string) => void;
+  searchValue: string;
 }
 
 const ChecklistFilter = ({
@@ -32,6 +36,8 @@ const ChecklistFilter = ({
   filters,
   label,
   filterKey,
+  searchFunction,
+  searchValue,
 }: ChecklistFilterProps) => {
   const { selectedFilters, setSelectedFilters } = useMembersContext();
   const [open, setOpen] = useState(false);
@@ -49,7 +55,10 @@ const ChecklistFilter = ({
   const handleFilterChange = (key: any, values: any) => {
     setSelectedFilters((prev: any) => ({
       ...prev,
-      [key]: values.length > 0 ? values : undefined,
+      [filterKey]: {
+        ...prev[filterKey],
+        in: values.length > 0 ? values : undefined,
+      },
     }));
   };
 
@@ -78,7 +87,31 @@ const ChecklistFilter = ({
         align="start"
       >
         <Command>
-          <CommandInput placeholder={`Search ${label}`} className="h-9" />
+          <div className="flex h-9 items-center gap-2 px-3.5 py-2.5 border border-neutral-800 mx-4 rounded-[5px] mb-1">
+            <Input
+              placeholder={`Search ${label === "Name" ? "Username" : label}`}
+              className="border-none p-0 text-sm !text-neutral-400 font-normal"
+              onChange={(e) => {
+                const target = e.target as HTMLInputElement;
+                searchFunction(target.value);
+              }}
+              value={searchValue}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const target = e.target as HTMLInputElement;
+                  setSelectedFilters((prev: any) => ({
+                    ...prev,
+                    [filterKey]: {
+                      ...prev[filterKey],
+                      equal: target.value,
+                    },
+                  }));
+                  setOpen(false);
+                }
+              }}
+            />
+            <SearchIcon className="size-5 shrink-0 text-neutral-500" />
+          </div>
           <CommandList>
             <CommandEmpty>{`No ${label.toLocaleLowerCase()} found.`}</CommandEmpty>
             <CommandGroup className="p-0">

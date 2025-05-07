@@ -2,7 +2,13 @@
 
 import { useEffect, useState, useMemo } from "react";
 
-import { useMembers } from "@/actions/members/useMembers";
+import {
+  useMembers,
+  useSearchMembersByDomain,
+  useSearchMembersByEmailAddress,
+  useSearchMembersByMobileNumber,
+  useSearchMembersByName,
+} from "@/actions/members/useMembers";
 import { Member } from "@/types";
 import MembersTable from "@/components/members/table";
 import { MembersContext } from "@/contexts/MembersContext";
@@ -15,17 +21,12 @@ const Home = () => {
     undefined
   );
 
-  const [nameSearch, setNameSearch] = useState("");
-  const [emailSearch, setEmailSearch] = useState("");
-  const [mobileSearch, setMobileSearch] = useState("");
-  const [domainSearch, setDomainSearch] = useState("");
-
   const [selectedFilters, setSelectedFilters] = useState<{
-    name?: string[];
+    name?: any;
     verificationStatus?: string;
-    emailAddress?: string[];
-    mobileNumber?: string[];
-    domain?: string[];
+    emailAddress?: any;
+    mobileNumber?: any;
+    domain?: any;
     status?: string;
     dateTimeCreated?: { from: Date; to: Date };
     dateTimeLastActive?: { from: Date; to: Date };
@@ -46,14 +47,43 @@ const Home = () => {
           greaterThanOrEqual: value.from.toISOString(),
           lesserThanOrEqual: value.to.toISOString(),
         };
-      } else if (Array.isArray(value) && value.length > 0) {
-        output[key] = { in: value };
-      } else if (typeof value === "string" && value.trim() !== "") {
+      } else if (
+        (key === "name" ||
+          key === "emailAddress" ||
+          key === "mobileNumber" ||
+          (key === "domain" && key === "domain")) &&
+        value
+      ) {
+        let obj: { equal?: string; in?: string[] } = {};
+
+        if (
+          value.in != null &&
+          value.in !== "" &&
+          (Array.isArray(value.in) ? value.in.length : true)
+        ) {
+          obj["in"] = value.in;
+        }
+
+        if (value.equal != null && value.equal !== "") {
+          obj["equal"] = value.equal;
+        }
+
+        if (Object.keys(obj).length > 0) {
+          output[key] = obj;
+        }
+      } else if (
+        (key === "verificationStatus" || key === "status") &&
+        typeof value === "string" &&
+        value.trim() !== ""
+      ) {
         output[key] = { equal: value };
       }
     });
-
     return Object.keys(output).length > 0 ? output : undefined;
+  }, [selectedFilters]);
+
+  useEffect(() => {
+    console.log(filter);
   }, [selectedFilters]);
 
   const { data, isLoading, isFetching } = useMembers({
@@ -65,8 +95,76 @@ const Home = () => {
   useEffect(() => {
     const members = data?.edges?.map((edge: any) => edge.node) || [];
     setMembers(members);
-    console.log(members.length);
   }, [data, isLoading, isFetching]);
+
+  const [nameSearch, setNameSearch] = useState("ne");
+  const [emailSearch, setEmailSearch] = useState("");
+  const [mobileSearch, setMobileSearch] = useState("");
+  const [domainSearch, setDomainSearch] = useState("");
+
+  const domainResult = useSearchMembersByDomain({
+    search: domainSearch,
+    first: pageSize,
+  });
+
+  const nameResult = useSearchMembersByName({
+    search: nameSearch,
+    first: pageSize,
+  });
+
+  const emailAddressResult = useSearchMembersByEmailAddress({
+    search: emailSearch,
+    first: pageSize,
+  });
+
+  const mobileNumberResult = useSearchMembersByMobileNumber({
+    search: mobileSearch,
+    first: pageSize,
+  });
+
+  useEffect(() => {
+    if (nameSearch.length > 1) {
+      if (nameResult) {
+        setMembers(nameResult.data);
+      }
+    } else {
+      const members = data?.edges?.map((edge: any) => edge.node) || [];
+      setMembers(members);
+    }
+  }, [nameSearch, nameResult]);
+
+  // useEffect(() => {
+  //   if (domainSearch.length > 1) {
+  //     if (domainResult && domainResult.data) {
+  //       setMembers(domainResult.data);
+  //     }
+  //   } else {
+  //     const members = data?.edges?.map((edge: any) => edge.node) || [];
+  //     setMembers(members);
+  //   }
+  // }, [domainSearch, domainResult]);
+
+  // useEffect(() => {
+  //   if (emailSearch.length > 1) {
+  //     if (emailAddressResult) {
+  //       setMembers(emailAddressResult.data);
+  //     }
+  //   } else {
+  //     const members = data?.edges?.map((edge: any) => edge.node) || [];
+  //     setMembers(members);
+  //   }
+  // }, [emailSearch, emailAddressResult]);
+
+  // useEffect(() => {
+  //   if (mobileSearch.length > 1) {
+  //     if (mobileNumberResult) {
+  //       setMembers(mobileNumberResult.data);
+  //     }
+  //   } else {
+  //     const members = data?.edges?.map((edge: any) => edge.node) || [];
+  //     setMembers(members);
+  //   }
+  // }, [mobileSearch, mobileNumberResult]);
 
   return (
     <MembersContext.Provider
@@ -82,6 +180,16 @@ const Home = () => {
         setSelectedFilters,
         data,
         isLoading,
+        domainSearch,
+        setDomainSearch,
+        emailSearch,
+        setEmailSearch,
+        mobileSearch,
+        setMobileSearch,
+        nameSearch,
+        setNameSearch,
+        filter,
+        setFilter: setSelectedFilters,
       }}
     >
       <div className="flex flex-col">

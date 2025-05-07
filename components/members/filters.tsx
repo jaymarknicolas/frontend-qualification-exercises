@@ -4,10 +4,16 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
-import { Skeleton } from "../ui/skeleton";
+
+import {
+  useSearchMembersByDomain,
+  useSearchMembersByEmailAddress,
+  useSearchMembersByMobileNumber,
+  useSearchMembersByName,
+} from "@/actions/members/useMembers";
 
 // hooks
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 // custom hooks
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -19,23 +25,39 @@ import ChecklistFilter from "./filter-components/checklist-filter";
 import { useMembersContext } from "@/contexts/MembersContext";
 
 const MembersFilter = () => {
-  const {
-    setDomainSearch,
-    setEmailSearch,
-    setNameSearch,
-    setMobileSearch,
-    nameSearch,
-    emailSearch,
-    mobileSearch,
-    domainSearch,
-    members,
-  } = useMembersContext();
+  const { members } = useMembersContext();
 
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [selectedDateFilterOption, setSelectedDateFilterOption] = useState({
     dateTimeCreated: "This week",
     dateTimeLastActive: "This week",
+  });
+
+  const [emailSearch, setEmailSearch] = useState("");
+  const [mobileSearch, setMobileSearch] = useState("");
+  const [domainSearch, setDomainSearch] = useState("");
+
+  const domainResult = useSearchMembersByDomain({
+    search: domainSearch,
+    first: 20,
+  });
+
+  const [nameSearch, setNameSearch] = useState("");
+
+  const nameResult = useSearchMembersByName({
+    search: nameSearch,
+    first: 20,
+  });
+
+  const emailAddressResult = useSearchMembersByEmailAddress({
+    search: emailSearch,
+    first: 20,
+  });
+
+  const mobileNumberResult = useSearchMembersByMobileNumber({
+    search: mobileSearch,
+    first: 20,
   });
 
   const unique = (array: string[]): string[] => Array.from(new Set(array));
@@ -47,19 +69,41 @@ const MembersFilter = () => {
     return {
       name: {
         label: "Name",
-        filters: getFilters("name"),
+        filters:
+          nameResult && nameResult.data
+            ? unique(nameResult.data.map((m: any) => m["name"]).filter(Boolean))
+            : getFilters("name"),
       },
       domain: {
         label: "Domain",
-        filters: getFilters("domain"),
+        filters:
+          domainResult && domainResult.data
+            ? unique(
+                domainResult.data.map((m: any) => m["domain"]).filter(Boolean)
+              )
+            : getFilters("domain"),
       },
       emailAddress: {
         label: "Email Address",
-        filters: getFilters("emailAddress"),
+        filters:
+          emailAddressResult && emailAddressResult.data
+            ? unique(
+                emailAddressResult.data
+                  .map((m: any) => m["emailAddress"])
+                  .filter(Boolean)
+              )
+            : getFilters("emailAddress"),
       },
       mobileNumber: {
         label: "Mobile Number",
-        filters: getFilters("mobileNumber"),
+        filters:
+          mobileNumberResult && mobileNumberResult.data
+            ? unique(
+                mobileNumberResult.data
+                  .map((m: any) => m["mobileNumber"])
+                  .filter(Boolean)
+              )
+            : getFilters("mobileNumber"),
       },
       verificationStatus: {
         label: "Verification Status",
@@ -70,7 +114,7 @@ const MembersFilter = () => {
         filters: getFilters("status"),
       },
     };
-  }, [members]);
+  }, [members, nameResult, domainResult]);
 
   return (
     <div className="border border-neutral-800 bg-primary-foreground p-4 border-b-0">

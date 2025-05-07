@@ -2,13 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 
-import {
-  useMembers,
-  useSearchMembersByDomain,
-  useSearchMembersByEmailAddress,
-  useSearchMembersByMobileNumber,
-  useSearchMembersByName,
-} from "@/actions/members/useMembers";
+import { useMembers } from "@/actions/members/useMembers";
 import { Member } from "@/types";
 import MembersTable from "@/components/members/table";
 import { MembersContext } from "@/contexts/MembersContext";
@@ -55,10 +49,6 @@ const Home = () => {
     return Object.keys(output).length ? output : undefined;
   }, [selectedFilters]);
 
-  useEffect(() => {
-    console.log(selectedFilters);
-  }, [selectedFilters]);
-
   const { data, isLoading, isFetching } = useMembers({
     first: pageSize,
     after: currentAfter,
@@ -69,75 +59,6 @@ const Home = () => {
     const members = data?.edges?.map((edge: any) => edge.node) || [];
     setMembers(members);
   }, [data, isLoading, isFetching]);
-
-  const [nameSearch, setNameSearch] = useState("ne");
-  const [emailSearch, setEmailSearch] = useState("");
-  const [mobileSearch, setMobileSearch] = useState("");
-  const [domainSearch, setDomainSearch] = useState("");
-
-  // const domainResult = useSearchMembersByDomain({
-  //   search: domainSearch,
-  //   first: pageSize,
-  // });
-
-  // const nameResult = useSearchMembersByName({
-  //   search: nameSearch,
-  //   first: pageSize,
-  // });
-
-  // const emailAddressResult = useSearchMembersByEmailAddress({
-  //   search: emailSearch,
-  //   first: pageSize,
-  // });
-
-  // const mobileNumberResult = useSearchMembersByMobileNumber({
-  //   search: mobileSearch,
-  //   first: pageSize,
-  // });
-
-  // useEffect(() => {
-  //   if (nameSearch.length > 1) {
-  //     if (nameResult) {
-  //       setMembers(nameResult.data);
-  //     }
-  //   } else {
-  //     const members = data?.edges?.map((edge: any) => edge.node) || [];
-  //     setMembers(members);
-  //   }
-  // }, [nameSearch, nameResult]);
-
-  // useEffect(() => {
-  //   if (domainSearch.length > 1) {
-  //     if (domainResult && domainResult.data) {
-  //       setMembers(domainResult.data);
-  //     }
-  //   } else {
-  //     const members = data?.edges?.map((edge: any) => edge.node) || [];
-  //     setMembers(members);
-  //   }
-  // }, [domainSearch, domainResult]);
-
-  // useEffect(() => {
-  //   if (emailSearch.length > 1) {
-  //     if (emailAddressResult) {
-  //       setMembers(emailAddressResult.data);
-  //     }
-  //   } else {
-  //     const members = data?.edges?.map((edge: any) => edge.node) || [];
-  //     setMembers(members);
-  //   }
-  // }, [emailSearch, emailAddressResult]);
-
-  // useEffect(() => {
-  //   if (mobileSearch.length > 1) {
-  //     if (mobileNumberResult) {
-  //       setMembers(mobileNumberResult.data);
-  //     }
-  //   } else {
-  //     const members = data?.edges?.map((edge: any) => edge.node) || [];
-  //     setMembers(members);
-  //   }
-  // }, [mobileSearch, mobileNumberResult]);
 
   return (
     <MembersContext.Provider
@@ -153,16 +74,6 @@ const Home = () => {
         setSelectedFilters,
         data,
         isLoading,
-        domainSearch,
-        setDomainSearch,
-        emailSearch,
-        setEmailSearch,
-        mobileSearch,
-        setMobileSearch,
-        nameSearch,
-        setNameSearch,
-        filter,
-        setFilter: setSelectedFilters,
       }}
     >
       <div className="flex flex-col">

@@ -18,8 +18,6 @@ export function useMembers(params: FilterParams) {
 }
 
 export function useSearchMembersByDomain(params: SearchParams) {
-  if (!params.search) return null;
-
   return useQuery({
     queryKey: ["domain", params],
     queryFn: () => getFilteredMembersByDomain(params),
@@ -27,18 +25,14 @@ export function useSearchMembersByDomain(params: SearchParams) {
 }
 
 export function useSearchMembersByName(params: SearchParams) {
-  console.log(params.search);
-  if (!params.search) return null;
-
   return useQuery({
     queryKey: ["name", params],
     queryFn: () => getFilteredMembersByName(params),
+    enabled: params.search.length > 1,
   });
 }
 
 export function useSearchMembersByEmailAddress(params: SearchParams) {
-  if (!params.search) return null;
-
   return useQuery({
     queryKey: ["email_address", params],
     queryFn: () => getFilteredMembersByEmailAddress(params),
@@ -46,8 +40,6 @@ export function useSearchMembersByEmailAddress(params: SearchParams) {
 }
 
 export function useSearchMembersByMobileNumber(params: SearchParams) {
-  if (!params.search) return null;
-
   return useQuery({
     queryKey: ["mobile_number", params],
     queryFn: () => getFilteredMembersByMobileNumber(params),

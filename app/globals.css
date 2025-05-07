@@ -163,7 +163,7 @@
   }
 
   .rdp-day:hover {
-    background-color: #fbbd2d !important;
+    background-color: #98712b !important;
   }
 
   .rdp-day_today::after {
@@ -195,5 +195,17 @@
 
   .rdp-day {
     @apply !text-sm !font-normal !text-neutral-200;
+  }
+
+  /* For Chrome, Safari, Edge */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Optional: Hide the arrow in older Edge/IE (won’t affect modern browsers) */
+  input[type="date"]::-ms-clear,
+  input[type="date"]::-ms-expand {
+    display: none;
   }
 }

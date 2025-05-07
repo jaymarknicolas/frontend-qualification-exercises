@@ -8,7 +8,7 @@ import { Filter, X } from "lucide-react";
 // hooks
 import { useState } from "react";
 
-// utils
+// hooks
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 // filters
@@ -18,7 +18,7 @@ import FilterMobileNumber from "./filters/filter-mobile-number";
 import FilterDomain from "./filters/filter-domain";
 import FilterVerificationStatus from "./filters/filter-verification-status";
 import FilterStatus from "./filters/filter-status";
-import { DateRangePicker } from "./filters/components/date-range-picker";
+import DateRangePicker from "./filters/components/date-range-picker";
 
 const MembersFilter = () => {
   const [open, setOpen] = useState(false);
@@ -71,14 +71,20 @@ const MembersFilter = () => {
               <h3 className="text-lg font-medium">Filters</h3>
             </div>
             <div className="grid gap-3">
-              <FilterName />
-              <FilterVerificationStatus />
-              <FilterEmail />
-              <FilterMobileNumber />
-              <FilterDomain />
-              <DateRangePicker label="Date Registered" />
-              <FilterStatus />
-              <DateRangePicker label="Date and Time Last Active" />
+              <FilterName className="justify-between" />
+              <FilterVerificationStatus className="justify-between" />
+              <FilterEmail className="justify-between" />
+              <FilterMobileNumber className="justify-between" />
+              <FilterDomain className="justify-between" />
+              <DateRangePicker
+                label="Date Registered"
+                className="justify-between"
+              />
+              <FilterStatus className="justify-between" />
+              <DateRangePicker
+                label="Date and Time Last Active"
+                className="justify-between"
+              />
             </div>
           </SheetContent>
         </Sheet>

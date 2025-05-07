@@ -1,24 +1,9 @@
 "use client";
 
-import { enUS } from "date-fns/locale";
 import { useState } from "react";
-import {
-  addDays,
-  addMonths,
-  startOfWeek,
-  endOfWeek,
-  startOfMonth,
-  endOfMonth,
-  startOfYear,
-  endOfYear,
-  subDays,
-  subWeeks,
-  subMonths,
-  subYears,
-} from "date-fns";
+import { format, addMonths, startOfMonth, subMonths } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // or use your own icons
 import { DayPicker } from "react-day-picker";
-import { Day } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -28,85 +13,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ChevronDown } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { getDateRange } from "@/lib/utils";
 
-const localeWithMonday = {
-  ...enUS,
-  options: { ...enUS.options, weekStartsOn: 1 as Day }, // Change this line
-};
-
-const getDateRange = (label: string) => {
-  const today = new Date();
-  switch (label) {
-    case "Today":
-      return { from: today, to: today };
-    case "Yesterday":
-      const yesterday = subDays(today, 1);
-      return { from: yesterday, to: yesterday };
-    case "This week":
-      return { from: startOfWeek(today), to: endOfWeek(today) };
-    case "Last week":
-      return {
-        from: startOfWeek(subWeeks(today, 1)),
-        to: endOfWeek(subWeeks(today, 1)),
-      };
-    case "This month":
-      return { from: startOfMonth(today), to: endOfMonth(today) };
-    case "Last month":
-      const lastMonth = subMonths(today, 1);
-      return { from: startOfMonth(lastMonth), to: endOfMonth(lastMonth) };
-    case "This year":
-      return { from: startOfYear(today), to: endOfYear(today) };
-    case "Last year":
-      const lastYear = subYears(today, 1);
-      return { from: startOfYear(lastYear), to: endOfYear(lastYear) };
-    case "All time":
-      return { from: new Date(1582, 9, 4), to: today };
-    default:
-      return { from: today, to: today };
-  }
-};
-
-function CustomCaption({
-  displayMonth,
-  setMonth,
-  is_last_month,
-}: {
-  displayMonth: Date;
-  setMonth: (d: Date) => void;
-  is_last_month: boolean;
-}) {
-  return (
-    <div className="flex justify-between items-center px-4 py-2 text-white">
-      <button onClick={() => setMonth(subMonths(displayMonth, 1))}>
-        <ChevronLeft
-          className={`size-5 ${
-            is_last_month ? "text-[#667085]" : "text-neutral-100"
-          }`}
-        />
-      </button>
-      <span className="text-sm font-medium">
-        {displayMonth.toLocaleString("default", {
-          month: "long",
-          year: "numeric",
-        })}
-      </span>
-      <button onClick={() => setMonth(addMonths(displayMonth, 1))}>
-        <ChevronRight
-          className={`size-5 ${
-            is_last_month ? "text-[#667085]" : "text-neutral-100"
-          }`}
-        />
-      </button>
-    </div>
-  );
-}
-
+// utils
+import { useMediaQuery } from "@/hooks/use-media-query";
 interface DateRangePickerProps {
   className?: string;
   label: string;
 }
 
-export function DateRangePicker({ label, className }: DateRangePickerProps) {
+const DateRangePicker = ({ label, className }: DateRangePickerProps) => {
   const options = [
     "Today",
     "Yesterday",
@@ -119,6 +36,7 @@ export function DateRangePicker({ label, className }: DateRangePickerProps) {
     "All time",
   ];
 
+  const [open, setOpen] = useState(false);
   const [range, setRange] = useState<{ from: Date; to: Date }>(
     getDateRange("This week")
   );
@@ -137,7 +55,7 @@ export function DateRangePicker({ label, className }: DateRangePickerProps) {
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -177,7 +95,7 @@ export function DateRangePicker({ label, className }: DateRangePickerProps) {
           <div className="flex flex-col">
             {/* Calendars */}
             <div className="flex gap-4">
-              <div className="py-5 px-6">
+              <div className=" px-6">
                 <DayPicker
                   mode="range"
                   selected={range}
@@ -195,10 +113,9 @@ export function DateRangePicker({ label, className }: DateRangePickerProps) {
                     ),
                   }}
                   showOutsideDays
-                  locale={localeWithMonday}
                 />
               </div>
-              <div className="py-5 px-6">
+              <div className=" px-6">
                 <DayPicker
                   mode="range"
                   selected={range}
@@ -216,35 +133,43 @@ export function DateRangePicker({ label, className }: DateRangePickerProps) {
                     ),
                   }}
                   showOutsideDays
-                  locale={localeWithMonday}
                 />
               </div>
             </div>
 
             {/* Time & Actions */}
-            <div className="flex flex-col justify-between p-4 border-t border-neutral-800 w-full flex-nowrap">
-              <div className="flex justify-between items-center gap-4">
-                <input
-                  type="datetime-local"
-                  value={range.from?.toISOString().slice(0, 16) ?? ""}
-                  className="bg-zinc-800 p-2 rounded text-white"
-                />
-                <span>–</span>
-                <input
-                  type="datetime-local"
-                  value={range.to?.toISOString().slice(0, 16) ?? ""}
-                  className="bg-zinc-800 p-2 rounded text-white"
-                />
+            <div className="border-neutral-800 flex items-center justify-between border-t p-4">
+              <div className="flex items-center gap-3 text-white flex-1">
+                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden">
+                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r">
+                    {format(range.from, "MMM d, yyyy")}
+                  </div>
+                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-l">
+                    {format(range.from, "HH:mm:ss")}
+                  </div>
+                </div>
+
+                <Separator orientation="horizontal" className="!max-w-2" />
+
+                <div className="flex border border-neutral-800 rounded-[4px] overflow-hidden">
+                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-r">
+                    {format(range.to, "MMM d, yyyy")}
+                  </div>
+                  <div className="py-3.5 px-2.5 !text-[#BBBCBD] font-normal text-base border-neutral-800 border-l">
+                    {format(range.to, "HH:mm:ss")}
+                  </div>
+                </div>
               </div>
 
-              <div className="flex justify-end mt-4 gap-2">
+              <div className="flex items-center gap-3">
                 <Button
                   variant="outline"
-                  className="border-yellow-500 text-yellow-500"
+                  className="border-[#7F6832] !text-[#F2BF4E] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5"
+                  onClick={() => setOpen(false)}
                 >
                   Cancel
                 </Button>
-                <Button className="bg-yellow-500 text-black hover:bg-yellow-600">
+                <Button className="border-[#F2BF4E] bg-[#F2BF4E] !text-[#0B1116] font-medium text-lg hover:bg-[#7F6832] !hover:text-white px-4 py-2.5">
                   Apply
                 </Button>
               </div>
@@ -253,5 +178,42 @@ export function DateRangePicker({ label, className }: DateRangePickerProps) {
         </div>
       </PopoverContent>
     </Popover>
+  );
+};
+
+export default DateRangePicker;
+
+function CustomCaption({
+  displayMonth,
+  setMonth,
+  is_last_month,
+}: {
+  displayMonth: Date;
+  setMonth: (d: Date) => void;
+  is_last_month: boolean;
+}) {
+  return (
+    <div className="flex justify-between items-center px-4 py-2 text-white">
+      <button onClick={() => setMonth(subMonths(displayMonth, 1))}>
+        <ChevronLeft
+          className={`size-5 ${
+            is_last_month ? "text-[#667085]" : "text-neutral-100"
+          }`}
+        />
+      </button>
+      <span className="text-sm font-medium">
+        {displayMonth.toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        })}
+      </span>
+      <button onClick={() => setMonth(addMonths(displayMonth, 1))}>
+        <ChevronRight
+          className={`size-5 ${
+            is_last_month ? "text-[#667085]" : "text-neutral-100"
+          }`}
+        />
+      </button>
+    </div>
   );
 }

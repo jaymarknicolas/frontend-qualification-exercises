@@ -47,7 +47,7 @@ const FilterDomain = ({ className }: FilterDomainProps) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-full lg:w-[240px] p-0 border-none rounded-[4px] py-4"
+        className="w-[240px] p-0 border-none rounded-[4px] py-4"
         align="start"
       >
         <Command>

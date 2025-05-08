@@ -108,8 +108,11 @@ const DateRangeFilter = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-full  p-0 border-none rounded-[4px] bg-primary -translate-y-6/12 lg:translate-none"
+        className="w-full  p-0 border-none rounded-[4px] bg-primary lg:translate-none"
         align="end"
+        style={{
+          transform: "translateY(-50%)",
+        }}
       >
         <div className="bg-primary text-white rounded-lg shadow-lg flex-col lg:flex-row flex">
           {/* Sidebar */}

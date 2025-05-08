@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { addMonths, startOfMonth, subMonths } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react"; // or use your own icons
+import { addMonths, startOfMonth } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,7 @@ import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getDateRange } from "@/lib/utils";
 import { useMembersContext } from "@/contexts/MembersContext";
-
+import { DateFilterOptions } from "@/types";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -32,8 +31,8 @@ interface DateRangeFilterProps {
   className?: string;
   label: string;
   filterKey: string;
-  selectedDateFilterOption: any;
-  setSelectedDateFilterOption: any;
+  selectedDateFilterOption: DateFilterOptions;
+  setSelectedDateFilterOption: (option: DateFilterOptions) => void;
 }
 
 const DateRangeFilter = ({
@@ -77,9 +76,12 @@ const DateRangeFilter = ({
   };
 
   const handleDateFilterChange = () => {
-    setSelectedFilters((prev: any) => ({
+    setSelectedFilters((prev) => ({
       ...prev,
-      [filterKey]: { from: range.from, to: range.to },
+      [filterKey]: {
+        from: range.from.toISOString(),
+        to: range.to.toISOString(),
+      },
     }));
     setOpen(false);
   };

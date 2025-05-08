@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
+import { Member } from "@/types";
 
 import {
   useSearchMembersByDomain,
@@ -13,7 +14,7 @@ import {
 } from "@/actions/members/useMembers";
 
 // hooks
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 
 // custom hooks
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -24,15 +25,18 @@ import StatusFilter from "./filter-components/status-filter";
 import ChecklistFilter from "./filter-components/checklist-filter";
 import { useMembersContext } from "@/contexts/MembersContext";
 
+import { DateFilterOptions } from "@/types";
+
 const MembersFilter = () => {
   const { members } = useMembersContext();
 
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const [selectedDateFilterOption, setSelectedDateFilterOption] = useState({
-    dateTimeCreated: "This week",
-    dateTimeLastActive: "This week",
-  });
+  const [selectedDateFilterOption, setSelectedDateFilterOption] =
+    useState<DateFilterOptions>({
+      dateTimeCreated: "This week",
+      dateTimeLastActive: "This week",
+    });
 
   const [emailSearch, setEmailSearch] = useState("");
   const [mobileSearch, setMobileSearch] = useState("");
@@ -65,13 +69,15 @@ const MembersFilter = () => {
   const filterOptions = useMemo(() => {
     const filters = members ?? [];
     const getFilters = (key: string) =>
-      unique(filters.map((m: any) => m[key]).filter(Boolean));
+      unique(filters.map((m: Member) => m[key]).filter(Boolean));
     return {
       name: {
         label: "Name",
         filters:
           nameResult && nameResult.data
-            ? unique(nameResult.data.map((m: any) => m["name"]).filter(Boolean))
+            ? unique(
+                nameResult.data.map((m: Member) => m["name"]).filter(Boolean)
+              )
             : getFilters("name"),
       },
       domain: {
@@ -79,7 +85,9 @@ const MembersFilter = () => {
         filters:
           domainResult && domainResult.data
             ? unique(
-                domainResult.data.map((m: any) => m["domain"]).filter(Boolean)
+                domainResult.data
+                  .map((m: Member) => m["domain"])
+                  .filter(Boolean)
               )
             : getFilters("domain"),
       },
@@ -89,7 +97,7 @@ const MembersFilter = () => {
           emailAddressResult && emailAddressResult.data
             ? unique(
                 emailAddressResult.data
-                  .map((m: any) => m["emailAddress"])
+                  .map((m: Member) => m["emailAddress"])
                   .filter(Boolean)
               )
             : getFilters("emailAddress"),
@@ -100,7 +108,7 @@ const MembersFilter = () => {
           mobileNumberResult && mobileNumberResult.data
             ? unique(
                 mobileNumberResult.data
-                  .map((m: any) => m["mobileNumber"])
+                  .map((m: Member) => m["mobileNumber"])
                   .filter(Boolean)
               )
             : getFilters("mobileNumber"),
@@ -114,7 +122,13 @@ const MembersFilter = () => {
         filters: getFilters("status"),
       },
     };
-  }, [members, nameResult, domainResult]);
+  }, [
+    members,
+    nameResult,
+    domainResult,
+    emailAddressResult,
+    mobileNumberResult,
+  ]);
 
   return (
     <div className="border border-neutral-800 bg-primary-foreground p-4 border-b-0">

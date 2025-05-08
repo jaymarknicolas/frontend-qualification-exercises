@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 
 import { useMembers } from "@/actions/members/useMembers";
-import { Member } from "@/types";
+import { FiltersMap, Member } from "@/types";
 import MembersTable from "@/components/members/table";
 import { MembersContext } from "@/contexts/MembersContext";
 
@@ -15,25 +15,18 @@ const Home = () => {
     undefined
   );
 
-  const [selectedFilters, setSelectedFilters] = useState<{
-    name?: any;
-    verificationStatus?: string;
-    emailAddress?: any;
-    mobileNumber?: any;
-    domain?: any;
-    status?: string;
-    dateTimeCreated?: { from: Date; to: Date };
-    dateTimeLastActive?: { from: Date; to: Date };
-  }>({});
+  const [selectedFilters, setSelectedFilters] = useState<FiltersMap>({});
 
   const filter = useMemo(() => {
-    const output: Record<string, any> = {};
+    const output: Record<string, FiltersMap> = {};
 
     for (const [key, value] of Object.entries(selectedFilters)) {
       if (
         (key === "dateTimeCreated" || key === "dateTimeLastActive") &&
-        value?.from &&
-        value?.to
+        typeof value === "object" &&
+        value !== null &&
+        "from" in value &&
+        "to" in value
       ) {
         output[key] = {
           greaterThanOrEqual: new Date(value.from).toISOString(),
@@ -49,10 +42,6 @@ const Home = () => {
     return Object.keys(output).length ? output : undefined;
   }, [selectedFilters]);
 
-  useEffect(() => {
-    console.log(selectedFilters);
-  }, [selectedFilters]);
-
   const { data, isLoading, isFetching } = useMembers({
     first: pageSize,
     after: currentAfter,
@@ -60,7 +49,7 @@ const Home = () => {
   });
 
   useEffect(() => {
-    const members = data?.edges?.map((edge: any) => edge.node) || [];
+    const members = data?.edges?.map((edge: Member) => edge.node) || [];
     setMembers(members);
   }, [data, isLoading, isFetching]);
 

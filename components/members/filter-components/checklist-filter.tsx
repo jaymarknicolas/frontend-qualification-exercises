@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import {
   Command,
   CommandEmpty,
@@ -19,7 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useMembersContext } from "@/contexts/MembersContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { FiltersMap } from "@/types";
 
 interface ChecklistFilterProps {
   className?: string;
@@ -41,22 +41,25 @@ const ChecklistFilter = ({
   const { selectedFilters, setSelectedFilters } = useMembersContext();
   const [open, setOpen] = useState(false);
   const [tempFilters, setTempFilters] = useState<string[]>(
-    selectedFilters[filterKey] || []
+    (selectedFilters[filterKey] as string[]) || []
+  );
+
+  const handleFilterChange = useCallback(
+    (values: string[]) => {
+      setSelectedFilters((prev: FiltersMap) => ({
+        ...prev,
+        [filterKey]: values.length > 0 ? values : undefined,
+      }));
+    },
+    [filterKey, setSelectedFilters]
   );
 
   // Apply filters only when popover closes
   useEffect(() => {
     if (!open) {
-      handleFilterChange(filterKey, tempFilters);
+      handleFilterChange(tempFilters);
     }
-  }, [open]);
-
-  const handleFilterChange = (key: any, values: any) => {
-    setSelectedFilters((prev: any) => ({
-      ...prev,
-      [filterKey]: values.length > 0 ? values : undefined,
-    }));
-  };
+  }, [open, filterKey, tempFilters, handleFilterChange]);
 
   const toggleValue = (value: string) => {
     setTempFilters((prev) =>

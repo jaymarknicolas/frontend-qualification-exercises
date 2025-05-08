@@ -1,6 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 import {
   startOfWeek,
   endOfWeek,
@@ -13,10 +17,6 @@ import {
   subMonths,
   subYears,
 } from "date-fns";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export const getDateRange = (label: string) => {
   const today = new Date();

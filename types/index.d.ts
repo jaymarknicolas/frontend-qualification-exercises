@@ -10,6 +10,7 @@ export interface Member {
   status: StatusType;
   dateTimeLastActive: string;
   wallet: Wallet;
+  [key: string]: any;
 }
 
 export type VerificationStatusType = "verified" | "unverified" | "pending";
@@ -67,3 +68,28 @@ export type FilterParams = {
     };
   };
 };
+
+export type FiltersMap = Record<
+  string,
+  string | string[] | undefined | { from: string; to: string }
+>;
+
+export interface MembersContextType {
+  members: Member[];
+  pageSize: number;
+  setPageSize: React.Dispatch<React.SetStateAction<number>>;
+  currentAfter?: string;
+  setCurrentAfter: (cursor?: string) => void;
+  cursorStack: string[];
+  setCursorStack: (stack: string[]) => void;
+  selectedFilters: FiltersMap;
+  setSelectedFilters: React.Dispatch<React.SetStateAction<FiltersMap>>;
+  data: any;
+  isLoading: boolean;
+}
+
+export interface DateFilterOptions {
+  [key: string]: string;
+  dateTimeCreated: string;
+  dateTimeLastActive: string;
+}

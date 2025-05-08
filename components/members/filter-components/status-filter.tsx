@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Popover,
   PopoverContent,
@@ -35,20 +35,23 @@ const StatusFilter = ({
   const { selectedFilters, setSelectedFilters } = useMembersContext();
   const [open, setOpen] = useState(false);
   const [tempValue, setTempValue] = useState<string | undefined>(
-    selectedFilters[filterKey]
+    selectedFilters[filterKey] as string | undefined
   );
 
-  const handleFilterChange = (key: any, value: any) => {
-    setSelectedFilters((prev: any) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
+  const handleFilterChange = useCallback(
+    (key: string, value: string | undefined) => {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    },
+    [setSelectedFilters]
+  );
   useEffect(() => {
     if (!open) {
       handleFilterChange(filterKey, tempValue);
     }
-  }, [open]);
+  }, [open, filterKey, tempValue, handleFilterChange]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

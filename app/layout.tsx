@@ -4,7 +4,6 @@ import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased bg-primary`}>
+      <body className={`${inter.className} antialiased bg-primary`}>
         {children}
       </body>
     </html>

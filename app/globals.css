@@ -232,6 +232,18 @@
   .calendar-container .rdp-nav svg {
     @apply size-5 !fill-[#667085];
   }
+
+  .react-datepicker-wrapper {
+    @apply flex-1;
+  }
+
+  .react-datepicker-wrapper:first-child {
+    @apply !border !border-r !border-neutral-800;
+  }
+
+  .react-datepicker-wrapper .react-datepicker__input-container input {
+    @apply border-none;
+  }
 }
 
 /* text-[#667085]" : "text-neutral-100 */

@@ -134,62 +134,66 @@
     border-color: #9ed2f7 !important;
   }
 
-  .rdp-day_range_start,
-  .rdp-day_range_end,
-  .rdp-day_range_middle {
+  .rdp-range_middle {
     background-color: #98712b !important;
   }
 
-  .rdp-day_range_start,
-  .rdp-day_range_end {
-    position: relative;
-    z-index: 2;
+  .rdp-range_start .rdp-day_button,
+  .rdp-range_end .rdp-day_button {
     @apply !font-medium;
+    background-color: #fbbd2d !important;
+    border-color: #fbbd2d !important;
   }
 
-  .rdp-day_range_start::before,
-  .rdp-day_range_end::before {
-    content: "";
-    border-radius: 100%;
+  .rdp-range_start {
+    background: linear-gradient(90deg, transparent 40%, #fbbd2d 60%) !important;
+  }
+
+  .rdp-range_end {
+    background: linear-gradient(
+      270deg,
+      transparent 40%,
+      #fbbd2d 60%
+    ) !important;
+  }
+
+  .rdp-day.rdp-selected.rdp-range_start.rdp-range_end {
     background-color: #fbbd2d !important;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    border-color: #fbbd2d !important;
+    border-radius: 100% !important;
   }
 
   .rdp-day:hover {
     background-color: #98712b !important;
   }
 
-  .rdp-day_today::after {
+  .rdp-today {
+    @apply !relative;
+  }
+
+  .rdp-today::after {
     content: "";
     z-index: 1;
     border-radius: 100%;
     width: 5px;
     height: 5px;
     position: absolute;
-    bottom: 2px;
+    bottom: 2px !important;
     left: 0px;
     left: 50%;
-    bottom: 0;
     transform: translateX(-50%);
     @apply !bg-neutral-700;
   }
 
-  .rdp-day_range_middle.rdp-day_today::after {
+  .rdp-range_middle.rdp-today::after {
     background-color: #fbbd2d !important;
   }
 
-  .rdp-table .rdp-head_cell {
+  .rdp-weekday {
     @apply !font-medium !text-sm text-neutral-200 !capitalize;
   }
 
-  .rdp-day_outside {
+  .rdp-outside {
     @apply !text-sm !font-normal !text-neutral-700;
   }
 
@@ -208,4 +212,26 @@
   input[type="date"]::-ms-expand {
     display: none;
   }
+
+  .rdp-nav {
+    @apply w-full justify-between;
+  }
+
+  .rdp-nav svg {
+    @apply size-5 !fill-neutral-100;
+  }
+
+  .rdp-month_caption {
+    @apply justify-center;
+  }
+
+  .rdp-caption_label {
+    @apply text-sm font-medium;
+  }
+
+  .calendar-container .rdp-nav svg {
+    @apply size-5 !fill-[#667085];
+  }
 }
+
+/* text-[#667085]" : "text-neutral-100 */

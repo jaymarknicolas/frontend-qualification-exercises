@@ -109,7 +109,7 @@ const DateRangeFilter = ({
         className="w-full  p-0 border-none rounded-[4px] bg-primary -translate-y-6/12 lg:translate-none"
         align="end"
       >
-        <div className="bg-primary text-white rounded-lg shadow-lg flex-col lg:flex-row">
+        <div className="bg-primary text-white rounded-lg shadow-lg flex-col lg:flex-row flex">
           {/* Sidebar */}
           <div className="  flex-col w-48 p-4 border-r border-neutral-800 gap-y-1 hidden lg:flex">
             {options.map((label) => (
@@ -157,7 +157,7 @@ const DateRangeFilter = ({
           </div>
           <div className="flex flex-col">
             {/* Calendars */}
-            <div className="flex gap-4">
+            <div className="flex gap-4 calendar-container">
               <div className=" px-6">
                 <DayPicker
                   mode="range"
@@ -174,15 +174,6 @@ const DateRangeFilter = ({
                   }}
                   month={month1}
                   onMonthChange={setMonth1}
-                  components={{
-                    Caption: (props) => (
-                      <CustomCaption
-                        {...props}
-                        setMonth={setMonth1}
-                        is_last_month={false}
-                      />
-                    ),
-                  }}
                   showOutsideDays
                 />
               </div>
@@ -202,15 +193,6 @@ const DateRangeFilter = ({
                   }}
                   month={month2}
                   onMonthChange={setMonth2}
-                  components={{
-                    Caption: (props) => (
-                      <CustomCaption
-                        {...props}
-                        setMonth={setMonth2}
-                        is_last_month={true}
-                      />
-                    ),
-                  }}
                   showOutsideDays
                 />
               </div>
@@ -308,67 +290,3 @@ const DateRangeFilter = ({
 };
 
 export default DateRangeFilter;
-
-function CustomCaption({
-  displayMonth,
-  setMonth,
-  is_last_month,
-}: {
-  displayMonth: Date;
-  setMonth: (d: Date) => void;
-  is_last_month: boolean;
-}) {
-  return (
-    <div className="flex justify-between items-center px-4 py-2 text-white">
-      <button onClick={() => setMonth(subMonths(displayMonth, 1))}>
-        <ChevronLeft
-          className={`size-5 ${
-            is_last_month ? "text-[#667085]" : "text-neutral-100"
-          }`}
-        />
-      </button>
-      <span className="text-sm font-medium">
-        {displayMonth.toLocaleString("default", {
-          month: "long",
-          year: "numeric",
-        })}
-      </span>
-      <button onClick={() => setMonth(addMonths(displayMonth, 1))}>
-        <ChevronRight
-          className={`size-5 ${
-            is_last_month ? "text-[#667085]" : "text-neutral-100"
-          }`}
-        />
-      </button>
-    </div>
-  );
-}
-
-const CustomInput = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLProps<HTMLDivElement>
->(({ value, onClick }, ref) => {
-  // Split the date-time string to separate date and time parts
-  let datePart = "Select date";
-  let timePart = "00:00:00";
-
-  if (value && typeof value === "string") {
-    const parts = value.split(" ");
-    // Extract date part (everything before the time)
-    datePart = parts.slice(0, -1).join(" ");
-    // Extract time part (last part)
-    timePart = parts[parts.length - 1];
-  }
-
-  return (
-    <div
-      className={`flex items-center w-full h-10 px-3 py-2 rounded-md bg-transparent border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 text-white cursor-pointer `}
-      onClick={onClick}
-      ref={ref}
-    >
-      <div className="flex-1">{datePart}</div>
-      <Separator orientation="vertical" className="mx-2 h-5" />
-      <div>{timePart}</div>
-    </div>
-  );
-});

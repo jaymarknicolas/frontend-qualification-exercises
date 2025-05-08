@@ -14,7 +14,6 @@ import { VerificationBadge } from "./verification-badge";
 import { StatusBadge } from "./status-badge";
 import MembersFilter from "./filters";
 import { format } from "date-fns";
-import { Member } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMembersContext } from "@/contexts/MembersContext";
 

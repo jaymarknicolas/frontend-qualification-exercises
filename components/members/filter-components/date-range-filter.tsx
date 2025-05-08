@@ -18,15 +18,7 @@ import { useMembersContext } from "@/contexts/MembersContext";
 import { DateFilterOptions } from "@/types";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 // custom hooks
 import { useMediaQuery } from "@/hooks/use-media-query";
